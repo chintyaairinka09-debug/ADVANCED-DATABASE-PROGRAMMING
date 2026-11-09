@@ -1,0 +1,3399 @@
+
+Setting environment for using XAMPP for Windows.
+AIO RPL@DESKTOP-IADQQDU c:\xampp
+# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| db_karyawan        |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+6 rows in set (0.020 sec)
+
+MariaDB [(none)]> CREATE DATABASE db_toko_besar;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [(none)]> use db_toko_besar;
+Database changed
+MariaDB [db_toko_besar]> Bye
+
+AIO RPL@DESKTOP-IADQQDU c:\xampp
+# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 9
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE DATABASE db_tokoku;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [(none)]> use db_toko;
+ERROR 1049 (42000): Unknown database 'db_toko'
+MariaDB [(none)]> use db_tokoku;
+Database changed
+MariaDB [db_tokoku]> CREATE TABLE tbl_pelanggan (
+    -> id_pelanggan INT AUTO_INCREMENT PRIMARY KEY,
+    -> nama_pelanggan VARCHAR(100),
+    -> kota VARCHAR(50)
+    ->
+    -> );
+Query OK, 0 rows affected (0.007 sec)
+
+MariaDB [db_tokoku]> show table tbl_pelanggan;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'tbl_pelanggan' at line 1
+MariaDB [db_tokoku]> desc tbl_pelanggan;
++----------------+--------------+------+-----+---------+----------------+
+| Field          | Type         | Null | Key | Default | Extra          |
++----------------+--------------+------+-----+---------+----------------+
+| id_pelanggan   | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nama_pelanggan | varchar(100) | YES  |     | NULL    |                |
+| kota           | varchar(50)  | YES  |     | NULL    |                |
++----------------+--------------+------+-----+---------+----------------+
+3 rows in set (0.012 sec)
+
+MariaDB [db_tokoku]> CREATE TABLE tbl_transaksi (
+    -> id_transaksi INT AUTO_INCREMENT PRIMARY KEY,
+    -> tanggal DATE,
+    -> id_pelanggan INT,
+    -> total_belanja DECIMAL(12,2),
+    -> FOREIGN KEY (id_pelanggan)
+    -> REFERENCES tbl_pelanggan(id_pelanggan)
+    ->
+    -> );
+Query OK, 0 rows affected (0.021 sec)
+
+MariaDB [db_tokoku]> desc tbl_transaksi;
++---------------+---------------+------+-----+---------+----------------+
+| Field         | Type          | Null | Key | Default | Extra          |
++---------------+---------------+------+-----+---------+----------------+
+| id_transaksi  | int(11)       | NO   | PRI | NULL    | auto_increment |
+| tanggal       | date          | YES  |     | NULL    |                |
+| id_pelanggan  | int(11)       | YES  | MUL | NULL    |                |
+| total_belanja | decimal(12,2) | YES  |     | NULL    |                |
++---------------+---------------+------+-----+---------+----------------+
+4 rows in set (0.009 sec)
+
+MariaDB [db_tokoku]> INSERT INTO tbl_pelanggan
+    -> (nama_pelanggan, kota)
+    -> VALUES
+    -> ('Andi', 'Ponorogo'),
+    -> ('Budi', 'Madiun'),
+    -> ('Citra', 'Surabaya');
+Query OK, 3 rows affected (0.021 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> select from * tbl_pelanggan;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from * tbl_pelanggan' at line 1
+MariaDB [db_tokoku]> select * from tbl_pelanggan;
++--------------+----------------+----------+
+| id_pelanggan | nama_pelanggan | kota     |
++--------------+----------------+----------+
+|            1 | Andi           | Ponorogo |
+|            2 | Budi           | Madiun   |
+|            3 | Citra          | Surabaya |
++--------------+----------------+----------+
+3 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> CREATE VIEW view_pelanggan AS
+    -> SELECT
+    -> id_pelanggan,
+    -> nama_pelanggan,
+    -> kota
+    -> FROM tbl_pelanggan;
+Query OK, 0 rows affected (0.003 sec)
+
+MariaDB [db_tokoku]> INSERT INTO tbl_transaksi
+    -> (tanggal, id_pelanggan, total_belanja)
+    -> VALUES
+    -> ('2026-10-01', 1, 250000),
+    -> ('2026-10-02', 2, 350000),
+    -> ('2026-10-03', 1, 150000),
+    -> ('2026-10-04', 3, 500000);
+Query OK, 4 rows affected (0.004 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> select * from tbl_transaksi;
++--------------+------------+--------------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | total_belanja |
++--------------+------------+--------------+---------------+
+|            1 | 2026-10-01 |            1 |     250000.00 |
+|            2 | 2026-10-02 |            2 |     350000.00 |
+|            3 | 2026-10-03 |            1 |     150000.00 |
+|            4 | 2026-10-04 |            3 |     500000.00 |
++--------------+------------+--------------+---------------+
+4 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> SELECT * FROM view_pelanggan;
++--------------+----------------+----------+
+| id_pelanggan | nama_pelanggan | kota     |
++--------------+----------------+----------+
+|            1 | Andi           | Ponorogo |
+|            2 | Budi           | Madiun   |
+|            3 | Citra          | Surabaya |
++--------------+----------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> CREATE VIEW view_transaksi_pelanggan AS
+    -> SELECT
+    -> t.id_transaksi,
+    -> t.tanggal,
+    -> p.nama_pelanggan,
+    -> p.kota,
+    -> t.total_belanja
+    -> FROM tbl_transaksi t
+    -> JOIN tbl_pelanggan p
+    -> ON t.id_pelanggan = p.id_pelanggan;
+Query OK, 0 rows affected (0.004 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM view_transaksi_pelanggan;
++--------------+------------+----------------+----------+---------------+
+| id_transaksi | tanggal    | nama_pelanggan | kota     | total_belanja |
++--------------+------------+----------------+----------+---------------+
+|            1 | 2026-10-01 | Andi           | Ponorogo |     250000.00 |
+|            2 | 2026-10-02 | Budi           | Madiun   |     350000.00 |
+|            3 | 2026-10-03 | Andi           | Ponorogo |     150000.00 |
+|            4 | 2026-10-04 | Citra          | Surabaya |     500000.00 |
++--------------+------------+----------------+----------+---------------+
+4 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> CREATE VIEW view_total_belanja AS
+    -> SELECT
+    -> p.id_pelanggan,
+    -> p.nama_pelanggan,
+    -> COUNT(t.id_transaksi) AS total_transaksi,
+    -> COALESCE(SUM(t.total_belanja), 0)
+    -> AS total_belanja
+    -> FROM tbl_pelanggan p
+    -> LEFT JOIN tbl_transaksi t
+    -> ON p.id_pelanggan = t.id_pelanggan
+    -> GROUP BY
+    -> p.id_pelanggan,
+    -> p.nama_pelanggan;
+Query OK, 0 rows affected (0.003 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM view_total_belanja;
++--------------+----------------+-----------------+---------------+
+| id_pelanggan | nama_pelanggan | total_transaksi | total_belanja |
++--------------+----------------+-----------------+---------------+
+|            1 | Andi           |               2 |     400000.00 |
+|            2 | Budi           |               1 |     350000.00 |
+|            3 | Citra          |               1 |     500000.00 |
++--------------+----------------+-----------------+---------------+
+3 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> show full tables;
++--------------------------+------------+
+| Tables_in_db_tokoku      | Table_type |
++--------------------------+------------+
+| tbl_pelanggan            | BASE TABLE |
+| tbl_transaksi            | BASE TABLE |
+| view_pelanggan           | VIEW       |
+| view_total_belanja       | VIEW       |
+| view_transaksi_pelanggan | VIEW       |
++--------------------------+------------+
+5 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> select database();
++------------+
+| database() |
++------------+
+| db_tokoku  |
++------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> show create view view_transaksi_pelanggan;
++--------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------+----------------------+
+| View                     | Create View                                                                                                                                                                                                                                                                                                                                                                               | character_set_client | collation_connection |
++--------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------+----------------------+
+| view_transaksi_pelanggan | CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_transaksi_pelanggan` AS select `t`.`id_transaksi` AS `id_transaksi`,`t`.`tanggal` AS `tanggal`,`p`.`nama_pelanggan` AS `nama_pelanggan`,`p`.`kota` AS `kota`,`t`.`total_belanja` AS `total_belanja` from (`tbl_transaksi` `t` join `tbl_pelanggan` `p` on(`t`.`id_pelanggan` = `p`.`id_pelanggan`)) | utf8mb4              | utf8mb4_general_ci   |
++--------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------+----------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM view_transaksi_pelanggan;
++--------------+------------+----------------+----------+---------------+
+| id_transaksi | tanggal    | nama_pelanggan | kota     | total_belanja |
++--------------+------------+----------------+----------+---------------+
+|            1 | 2026-10-01 | Andi           | Ponorogo |     250000.00 |
+|            2 | 2026-10-02 | Budi           | Madiun   |     350000.00 |
+|            3 | 2026-10-03 | Andi           | Ponorogo |     150000.00 |
+|            4 | 2026-10-04 | Citra          | Surabaya |     500000.00 |
++--------------+------------+----------------+----------+---------------+
+4 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> show tables;
++--------------------------+
+| Tables_in_db_tokoku      |
++--------------------------+
+| tbl_pelanggan            |
+| tbl_transaksi            |
+| view_pelanggan           |
+| view_total_belanja       |
+| view_transaksi_pelanggan |
++--------------------------+
+5 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> select * from tbl)pelanggan;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ')pelanggan' at line 1
+MariaDB [db_tokoku]> select * from tbl_pelanggan;
++--------------+----------------+----------+
+| id_pelanggan | nama_pelanggan | kota     |
++--------------+----------------+----------+
+|            1 | Andi           | Ponorogo |
+|            2 | Budi           | Madiun   |
+|            3 | Citra          | Surabaya |
++--------------+----------------+----------+
+3 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> insert into tblo_pelanggan;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+MariaDB [db_tokoku]> insert into tbl_pelanggan
+    -> (nama_pelanggan, kota) values
+    -> ('Joko', 'Solo'),
+    -> ('Rizky', 'Malang'),
+    -> ('Dewi', 'Semarang'),
+    -> ('Nina', 'Denpasar'),
+    -> ('Rahma', 'Yogyakarta'),
+    -> ('Fajar', 'Jakarta'),
+    -> ('Putri', 'Medan');
+Query OK, 7 rows affected (0.004 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> select * from tbl_pelanggan;
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
++--------------+----------------+------------+
+10 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> INSERT INTO tbl_transaksi
+    -> (tanggal, id_pelanggan, total_belanja)
+    -> VALUES
+    -> ('2026-10-05', 4, 275000),
+    -> ('2026-10-06', 5, 425000),
+    -> ('2026-10-07', 6, 180000),
+    -> ('2026-10-08', 7, 650000),
+    -> ('2026-10-09', 8, 320000),
+    -> ('2026-10-10', 9, 550000),
+    -> ('2026-10-11', 10, 750000),
+    -> ('2026-10-12', 1, 200000),
+    -> ('2026-10-13', 2, 375000),
+    -> ('2026-10-14', 3, 825000),
+    -> ('2026-10-15', 4, 150000),
+    -> ('2026-10-16', 5, 290000),
+    -> ('2026-10-17', 6, 475000),
+    -> ('2026-10-18', 7, 900000),
+    -> ('2026-10-19', 8, 225000),
+    -> ('2026-10-20', 9, 600000);
+Query OK, 16 rows affected (0.005 sec)
+Records: 16  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> select * from tbl_transaksi;
++--------------+------------+--------------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | total_belanja |
++--------------+------------+--------------+---------------+
+|            1 | 2026-10-01 |            1 |     250000.00 |
+|            2 | 2026-10-02 |            2 |     350000.00 |
+|            3 | 2026-10-03 |            1 |     150000.00 |
+|            4 | 2026-10-04 |            3 |     500000.00 |
+|            5 | 2026-10-05 |            4 |     275000.00 |
+|            6 | 2026-10-06 |            5 |     425000.00 |
+|            7 | 2026-10-07 |            6 |     180000.00 |
+|            8 | 2026-10-08 |            7 |     650000.00 |
+|            9 | 2026-10-09 |            8 |     320000.00 |
+|           10 | 2026-10-10 |            9 |     550000.00 |
+|           11 | 2026-10-11 |           10 |     750000.00 |
+|           12 | 2026-10-12 |            1 |     200000.00 |
+|           13 | 2026-10-13 |            2 |     375000.00 |
+|           14 | 2026-10-14 |            3 |     825000.00 |
+|           15 | 2026-10-15 |            4 |     150000.00 |
+|           16 | 2026-10-16 |            5 |     290000.00 |
+|           17 | 2026-10-17 |            6 |     475000.00 |
+|           18 | 2026-10-18 |            7 |     900000.00 |
+|           19 | 2026-10-19 |            8 |     225000.00 |
+|           20 | 2026-10-20 |            9 |     600000.00 |
++--------------+------------+--------------+---------------+
+20 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT COUNT(*) AS total_transaksi
+    -> FROM tbl_transaksi;
++-----------------+
+| total_transaksi |
++-----------------+
+|              20 |
++-----------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM view_transaksi_pelanggan;
++--------------+------------+----------------+------------+---------------+
+| id_transaksi | tanggal    | nama_pelanggan | kota       | total_belanja |
++--------------+------------+----------------+------------+---------------+
+|            1 | 2026-10-01 | Andi           | Ponorogo   |     250000.00 |
+|            3 | 2026-10-03 | Andi           | Ponorogo   |     150000.00 |
+|           12 | 2026-10-12 | Andi           | Ponorogo   |     200000.00 |
+|            2 | 2026-10-02 | Budi           | Madiun     |     350000.00 |
+|           13 | 2026-10-13 | Budi           | Madiun     |     375000.00 |
+|            4 | 2026-10-04 | Citra          | Surabaya   |     500000.00 |
+|           14 | 2026-10-14 | Citra          | Surabaya   |     825000.00 |
+|            5 | 2026-10-05 | Joko           | Solo       |     275000.00 |
+|           15 | 2026-10-15 | Joko           | Solo       |     150000.00 |
+|            6 | 2026-10-06 | Rizky          | Malang     |     425000.00 |
+|           16 | 2026-10-16 | Rizky          | Malang     |     290000.00 |
+|            7 | 2026-10-07 | Dewi           | Semarang   |     180000.00 |
+|           17 | 2026-10-17 | Dewi           | Semarang   |     475000.00 |
+|            8 | 2026-10-08 | Nina           | Denpasar   |     650000.00 |
+|           18 | 2026-10-18 | Nina           | Denpasar   |     900000.00 |
+|            9 | 2026-10-09 | Rahma          | Yogyakarta |     320000.00 |
+|           19 | 2026-10-19 | Rahma          | Yogyakarta |     225000.00 |
+|           10 | 2026-10-10 | Fajar          | Jakarta    |     550000.00 |
+|           20 | 2026-10-20 | Fajar          | Jakarta    |     600000.00 |
+|           11 | 2026-10-11 | Putri          | Medan      |     750000.00 |
++--------------+------------+----------------+------------+---------------+
+20 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM view_total_belanja;
++--------------+----------------+-----------------+---------------+
+| id_pelanggan | nama_pelanggan | total_transaksi | total_belanja |
++--------------+----------------+-----------------+---------------+
+|            1 | Andi           |               3 |     600000.00 |
+|            2 | Budi           |               2 |     725000.00 |
+|            3 | Citra          |               2 |    1325000.00 |
+|            4 | Joko           |               2 |     425000.00 |
+|            5 | Rizky          |               2 |     715000.00 |
+|            6 | Dewi           |               2 |     655000.00 |
+|            7 | Nina           |               2 |    1550000.00 |
+|            8 | Rahma          |               2 |     545000.00 |
+|            9 | Fajar          |               2 |    1150000.00 |
+|           10 | Putri          |               1 |     750000.00 |
++--------------+----------------+-----------------+---------------+
+10 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> CREATE TABLE tbl_detail_transaksi (
+    ->     id_detail INT AUTO_INCREMENT PRIMARY KEY,
+    ->     id_transaksi INT,
+    ->     nama_produk VARCHAR(100),
+    ->     jumlah INT,
+    ->     harga DECIMAL(12,2),
+    ->     FOREIGN KEY (id_transaksi)
+    ->     REFERENCES tbl_transaksi(id_transaksi)
+    -> );
+Query OK, 0 rows affected (0.022 sec)
+
+MariaDB [db_tokoku]> desc tbl_detail_transaksi;
++--------------+---------------+------+-----+---------+----------------+
+| Field        | Type          | Null | Key | Default | Extra          |
++--------------+---------------+------+-----+---------+----------------+
+| id_detail    | int(11)       | NO   | PRI | NULL    | auto_increment |
+| id_transaksi | int(11)       | YES  | MUL | NULL    |                |
+| nama_produk  | varchar(100)  | YES  |     | NULL    |                |
+| jumlah       | int(11)       | YES  |     | NULL    |                |
+| harga        | decimal(12,2) | YES  |     | NULL    |                |
++--------------+---------------+------+-----+---------+----------------+
+5 rows in set (0.012 sec)
+
+MariaDB [db_tokoku]> INSERT INTO tbl_detail_transaksi
+    -> (id_transaksi, nama_produk, jumlah, harga)
+    -> VALUES
+    -> (1, 'Beras 5 Kg', 2, 75000),
+    -> (1, 'Minyak Goreng', 1, 25000),
+    -> (2, 'Gula Pasir', 3, 15000),
+    -> (2, 'Teh Celup', 2, 12000),
+    -> (3, 'Kopi Bubuk', 2, 18000),
+    -> (4, 'Susu Kotak', 5, 10000),
+    -> (5, 'Mi Instan', 10, 3500),
+    -> (6, 'Sabun Mandi', 4, 8000),
+    -> (7, 'Telur Ayam', 2, 30000),
+    -> (8, 'Tepung Terigu', 3, 12000);
+Query OK, 10 rows affected (0.003 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> select * from tbl_detail_transaksi;
++-----------+--------------+---------------+--------+----------+
+| id_detail | id_transaksi | nama_produk   | jumlah | harga    |
++-----------+--------------+---------------+--------+----------+
+|         1 |            1 | Beras 5 Kg    |      2 | 75000.00 |
+|         2 |            1 | Minyak Goreng |      1 | 25000.00 |
+|         3 |            2 | Gula Pasir    |      3 | 15000.00 |
+|         4 |            2 | Teh Celup     |      2 | 12000.00 |
+|         5 |            3 | Kopi Bubuk    |      2 | 18000.00 |
+|         6 |            4 | Susu Kotak    |      5 | 10000.00 |
+|         7 |            5 | Mi Instan     |     10 |  3500.00 |
+|         8 |            6 | Sabun Mandi   |      4 |  8000.00 |
+|         9 |            7 | Telur Ayam    |      2 | 30000.00 |
+|        10 |            8 | Tepung Terigu |      3 | 12000.00 |
++-----------+--------------+---------------+--------+----------+
+
+MariaDB [db_tokoku]> Bye
+
+AIO RPL@DESKTOP-IADQQDU c:\xampp
+# mysql - u root
+mysql  Ver 15.1 Distrib 10.4.32-MariaDB, for Win64 (AMD64), source revision c4143f909528e3fab0677a28631d10389354c491
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Usage: mysql [OPTIONS] [database]
+
+Default options are read from the following files in the given order:
+C:\WINDOWS\my.ini C:\WINDOWS\my.cnf C:\my.ini C:\my.cnf C:\xampp\mysql\my.ini C:\xampp\mysql\my.cnf C:\xampp\mysql\data\my.ini C:\xampp\mysql\data\my.cnf C:\xampp\mysql\bin\my.ini C:\xampp\mysql\bin\my.cnf
+The following groups are read: mysql mariadb-client client client-server client-mariadb
+The following options may be given as the first argument:
+--print-defaults          Print the program argument list and exit.
+--no-defaults             Don't read default options from any option file.
+The following specify which files/extra groups are read (specified before remaining options):
+--defaults-file=#         Only read default options from the given file #.
+--defaults-extra-file=#   Read this file after the global files are read.
+--defaults-group-suffix=# Additionally read default groups with # appended as a suffix.
+
+  -?, --help          Display this help and exit.
+  -I, --help          Synonym for -?
+  --abort-source-on-error
+                      Abort 'source filename' operations in case of errors
+  --auto-rehash       Enable automatic rehashing. One doesn't need to use
+                      'rehash' to get table and field completion, but startup
+                      and reconnecting may take a longer time. Disable with
+                      --disable-auto-rehash.
+                      (Defaults to on; use --skip-auto-rehash to disable.)
+  -A, --no-auto-rehash
+                      No automatic rehashing. One has to use 'rehash' to get
+                      table and field completion. This gives a quicker start of
+                      mysql and disables rehashing on reconnect.
+  --auto-vertical-output
+                      Automatically switch to vertical output mode if the
+                      result is wider than the terminal width.
+  -B, --batch         Don't use history file. Disable interactive behavior.
+                      (Enables --silent.)
+  --binary-as-hex     Print binary data as hex
+  --character-sets-dir=name
+                      Directory for character set files.
+  --column-type-info  Display column type information.
+  -c, --comments      Preserve comments. Send comments to the server. The
+                      default is --skip-comments (discard comments), enable
+                      with --comments.
+  -C, --compress      Use compression in server/client protocol.
+  -#, --debug[=#]     This is a non-debug version. Catch this and exit.
+  --debug-check       Check memory and open file usage at exit.
+  -T, --debug-info    Print some debug info at exit.
+  -D, --database=name Database to use.
+  --default-character-set=name
+                      Set the default character set.
+  --delimiter=name    Delimiter to be used.
+  -e, --execute=name  Execute command and quit. (Disables --force and history
+                      file.)
+  --enable-cleartext-plugin
+                      Obsolete option. Exists only for MySQL compatibility.
+  -E, --vertical      Print the output of a query (rows) vertically.
+  -f, --force         Continue even if we get an SQL error. Sets
+                      abort-source-on-error to 0
+  -G, --named-commands
+                      Enable named commands. Named commands mean this program's
+                      internal commands; see mysql> help . When enabled, the
+                      named commands can be used from any line of the query,
+                      otherwise only from the first line, before an enter.
+                      Disable with --disable-named-commands. This option is
+                      disabled by default.
+  -i, --ignore-spaces Ignore space after function names.
+  --init-command=name SQL Command to execute when connecting to MariaDB server.
+                      Will automatically be re-executed when reconnecting.
+  --local-infile      Enable/disable LOAD DATA LOCAL INFILE.
+  -b, --no-beep       Turn off beep on error.
+  -h, --host=name     Connect to host.
+  -H, --html          Produce HTML output.
+  -X, --xml           Produce XML output.
+  --line-numbers      Write line numbers for errors.
+                      (Defaults to on; use --skip-line-numbers to disable.)
+  -L, --skip-line-numbers
+                      Don't write line number for errors.
+  -n, --unbuffered    Flush buffer after each query.
+  --column-names      Write column names in results.
+                      (Defaults to on; use --skip-column-names to disable.)
+  -N, --skip-column-names
+                      Don't write column names in results.
+  --sigint-ignore     Ignore SIGINT (CTRL-C).
+  -o, --one-database  Ignore statements except those that occur while the
+                      default database is the one named at the command line.
+  --pager[=name]      Pager to use to display results. If you don't supply an
+                      option, the default pager is taken from your ENV variable
+                      PAGER. Valid pagers are less, more, cat [> filename],
+                      etc. See interactive help (\h) also. This option does not
+                      work in batch mode. Disable with --disable-pager. This
+                      option is disabled by default.
+  -p, --password[=name]
+                      Password to use when connecting to server. If password is
+                      not given it's asked from the tty.
+  -W, --pipe          Use named pipes to connect to server.
+  -P, --port=#        Port number to use for connection or 0 for default to, in
+                      order of preference, my.cnf, $MYSQL_TCP_PORT,
+                      /etc/services, built-in default (3306).
+  --progress-reports  Get progress reports for long running commands (like
+                      ALTER TABLE)
+                      (Defaults to on; use --skip-progress-reports to disable.)
+  --prompt=name       Set the command line prompt to this value.
+  --protocol=name     The protocol to use for connection (tcp, socket, pipe).
+  -q, --quick         Don't cache result, print it row by row. This may slow
+                      down the server if the output is suspended. Doesn't use
+                      history file.
+  -r, --raw           Write fields without conversion. Used with --batch.
+  --reconnect         Reconnect if the connection is lost. Disable with
+                      --disable-reconnect. This option is enabled by default.
+                      (Defaults to on; use --skip-reconnect to disable.)
+  -s, --silent        Be more silent. Print results with a tab as separator,
+                      each row on new line.
+  -S, --socket=name   The socket file to use for connection.
+  --ssl               Enable SSL for connection (automatically enabled with
+                      other flags).
+  --ssl-ca=name       CA file in PEM format (check OpenSSL docs, implies
+                      --ssl).
+  --ssl-capath=name   CA directory (check OpenSSL docs, implies --ssl).
+  --ssl-cert=name     X509 cert in PEM format (implies --ssl).
+  --ssl-cipher=name   SSL cipher to use (implies --ssl).
+  --ssl-key=name      X509 key in PEM format (implies --ssl).
+  --ssl-crl=name      Certificate revocation list (implies --ssl).
+  --ssl-crlpath=name  Certificate revocation list path (implies --ssl).
+  --tls-version=name  TLS protocol version for secure connection.
+  --ssl-verify-server-cert
+                      Verify server's "Common Name" in its cert against
+                      hostname used when connecting. This option is disabled by
+                      default.
+  -t, --table         Output in table format.
+  --tee=name          Append everything into outfile. See interactive help (\h)
+                      also. Does not work in batch mode. Disable with
+                      --disable-tee. This option is disabled by default.
+  -u, --user=name     User for login if not current user.
+  -U, --safe-updates  Only allow UPDATE and DELETE that uses keys.
+  -U, --i-am-a-dummy  Synonym for option --safe-updates, -U.
+  -v, --verbose       Write more. (-v -v -v gives the table output format).
+  -V, --version       Output version information and exit.
+  -w, --wait          Wait and retry if connection is down.
+  --connect-timeout=# Number of seconds before connection timeout.
+  --max-allowed-packet=#
+                      The maximum packet length to send to or receive from
+                      server.
+  --net-buffer-length=#
+                      The buffer size for TCP/IP and socket communication.
+  --select-limit=#    Automatic limit for SELECT when using --safe-updates.
+  --max-join-size=#   Automatic limit for rows in a join when using
+                      --safe-updates.
+  --secure-auth       Refuse client connecting to server if it uses old
+                      (pre-4.1.1) protocol.
+  --server-arg=name   Send embedded server this as a parameter.
+  --show-warnings     Show warnings after every statement.
+  --plugin-dir=name   Directory for client-side plugins.
+  --default-auth=name Default authentication client-side plugin to use.
+  --binary-mode       Binary mode allows certain character sequences to be
+                      processed as data that would otherwise be treated with a
+                      special meaning by the parser. Specifically, this switch
+                      turns off parsing of all client commands except \C and
+                      DELIMITER in non-interactive mode (i.e., when binary mode
+                      is combined with either 1) piped input, 2) the --batch
+                      mysql option, or 3) the 'source' command). Also, in
+                      binary mode, occurrences of '\r\n' and ASCII '\0' are
+                      preserved within strings, whereas by default, '\r\n' is
+                      translated to '\n' and '\0' is disallowed in user input.
+  --connect-expired-password
+                      Notify the server that this client is prepared to handle
+                      expired password sandbox mode even if --batch was
+                      specified.
+
+Variables (--variable-name=value)
+and boolean options {FALSE|TRUE}  Value (after reading options)
+--------------------------------- ----------------------------------------
+abort-source-on-error             FALSE
+auto-rehash                       TRUE
+auto-vertical-output              FALSE
+binary-as-hex                     FALSE
+character-sets-dir                (No default value)
+column-type-info                  FALSE
+comments                          FALSE
+compress                          FALSE
+debug-check                       FALSE
+debug-info                        FALSE
+database                          (No default value)
+default-character-set             utf8mb4
+delimiter                         ;
+vertical                          FALSE
+force                             FALSE
+named-commands                    FALSE
+ignore-spaces                     FALSE
+init-command                      (No default value)
+local-infile                      FALSE
+no-beep                           FALSE
+host                              (No default value)
+html                              FALSE
+xml                               FALSE
+line-numbers                      TRUE
+unbuffered                        FALSE
+column-names                      TRUE
+sigint-ignore                     FALSE
+port                              3306
+progress-reports                  TRUE
+prompt                            \N [\d]>
+protocol
+quick                             FALSE
+raw                               FALSE
+reconnect                         TRUE
+socket                            C:/xampp/mysql/mysql.sock
+ssl                               FALSE
+ssl-ca                            (No default value)
+ssl-capath                        (No default value)
+ssl-cert                          (No default value)
+ssl-cipher                        (No default value)
+ssl-key                           (No default value)
+ssl-crl                           (No default value)
+ssl-crlpath                       (No default value)
+tls-version                       (No default value)
+ssl-verify-server-cert            FALSE
+table                             FALSE
+user                              (No default value)
+safe-updates                      FALSE
+i-am-a-dummy                      FALSE
+connect-timeout                   0
+max-allowed-packet                16777216
+net-buffer-length                 16384
+select-limit                      1000
+max-join-size                     1000000
+secure-auth                       FALSE
+show-warnings                     FALSE
+plugin-dir                        (No default value)
+default-auth                      (No default value)
+binary-mode                       FALSE
+connect-expired-password          FALSE
+
+AIO RPL@DESKTOP-IADQQDU c:\xampp
+# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 10
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| db_karyawan        |
+| db_toko_besar      |
+| db_tokoku          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+8 rows in set (0.001 sec)
+
+MariaDB [(none)]> use db_tokoku;
+Database changed
+MariaDB [db_tokoku]> show tables;
++--------------------------+
+| Tables_in_db_tokoku      |
++--------------------------+
+| tbl_detail_transaksi     |
+| tbl_pelanggan            |
+| tbl_transaksi            |
+| view_pelanggan           |
+| view_total_belanja       |
+| view_transaksi_pelanggan |
++--------------------------+
+6 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT
+    ->     p.nama_pelanggan,
+    ->     t.id_transaksi,
+    ->     t.tanggal,
+    ->     d.nama_produk,
+    ->     d.jumlah,
+    ->     d.harga
+    -> FROM tbl_pelanggan p
+    -> INNER JOIN tbl_transaksi t
+    ->     ON p.id_pelanggan = t.id_pelanggan
+    -> INNER JOIN tbl_detail_transaksi d
+    ->     ON t.id_transaksi = d.id_transaksi;
++----------------+--------------+------------+---------------+--------+----------+
+| nama_pelanggan | id_transaksi | tanggal    | nama_produk   | jumlah | harga    |
++----------------+--------------+------------+---------------+--------+----------+
+| Andi           |            1 | 2026-10-01 | Beras 5 Kg    |      2 | 75000.00 |
+| Andi           |            1 | 2026-10-01 | Minyak Goreng |      1 | 25000.00 |
+| Budi           |            2 | 2026-10-02 | Gula Pasir    |      3 | 15000.00 |
+| Budi           |            2 | 2026-10-02 | Teh Celup     |      2 | 12000.00 |
+| Andi           |            3 | 2026-10-03 | Kopi Bubuk    |      2 | 18000.00 |
+| Citra          |            4 | 2026-10-04 | Susu Kotak    |      5 | 10000.00 |
+| Joko           |            5 | 2026-10-05 | Mi Instan     |     10 |  3500.00 |
+| Rizky          |            6 | 2026-10-06 | Sabun Mandi   |      4 |  8000.00 |
+| Dewi           |            7 | 2026-10-07 | Telur Ayam    |      2 | 30000.00 |
+| Nina           |            8 | 2026-10-08 | Tepung Terigu |      3 | 12000.00 |
++----------------+--------------+------------+---------------+--------+----------+
+10 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT COUNT(*) AS total_detail_laporan
+    -> FROM tbl_pelanggan p
+    -> INNER JOIN tbl_transaksi t
+    ->     ON p.id_pelanggan = t.id_pelanggan
+    -> INNER JOIN tbl_detail_transaksi d
+    ->     ON t.id_transaksi = d.id_transaksi;
++----------------------+
+| total_detail_laporan |
++----------------------+
+|                   10 |
++----------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_transaksi
+    -> WHERE total_belanja > (
+    ->     SELECT AVG(total_belanja)
+    ->     FROM tbl_transaksi
+    -> );
++--------------+------------+--------------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | total_belanja |
++--------------+------------+--------------+---------------+
+|            4 | 2026-10-04 |            3 |     500000.00 |
+|            6 | 2026-10-06 |            5 |     425000.00 |
+|            8 | 2026-10-08 |            7 |     650000.00 |
+|           10 | 2026-10-10 |            9 |     550000.00 |
+|           11 | 2026-10-11 |           10 |     750000.00 |
+|           14 | 2026-10-14 |            3 |     825000.00 |
+|           17 | 2026-10-17 |            6 |     475000.00 |
+|           18 | 2026-10-18 |            7 |     900000.00 |
+|           20 | 2026-10-20 |            9 |     600000.00 |
++--------------+------------+--------------+---------------+
+9 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> SELECT AVG(total_belanja)
+    -> FROM tbl_transaksi;
++--------------------+
+| AVG(total_belanja) |
++--------------------+
+|      422000.000000 |
++--------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_pelanggan
+    -> WHERE id_pelanggan IN (
+    ->     SELECT id_pelanggan
+    ->     FROM tbl_transaksi
+    -> );
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
++--------------+----------------+------------+
+10 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM tbl_pelanggan p
+    -> WHERE EXISTS ( SELECT 1
+    -> FROM tbl_transaksi t
+    -> WHERE t.id_pelenggan = p.id_pelanggan);
+ERROR 1054 (42S22): Unknown column 't.id_pelenggan' in 'where clause'
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_pelanggan p
+    -> WHERE EXISTS (
+    ->     SELECT 1
+    ->     FROM tbl_transaksi t
+    ->     WHERE t.id_pelanggan = p.id_pelanggan
+    -> );
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
++--------------+----------------+------------+
+10 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> CREATE TABLE tbl_cabang (
+    ->     id_cabang INT AUTO_INCREMENT PRIMARY KEY,
+    ->     nama_cabang VARCHAR(100),
+    ->     kota VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.008 sec)
+
+MariaDB [db_tokoku]> INSERT INTO tbl_cabang (nama_cabang, kota)
+    -> VALUES
+    -> ('Cabang Ponorogo', 'Ponorogo'),
+    -> ('Cabang Jakarta', 'Jakarta'),
+    -> ('Cabang Bandung', 'Bandung'),
+    -> ('Cabang Kediri', 'Kediri');
+Query OK, 4 rows affected (0.005 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> SELECT * FROM tbl_cabang;
++-----------+-----------------+----------+
+| id_cabang | nama_cabang     | kota     |
++-----------+-----------------+----------+
+|         1 | Cabang Ponorogo | Ponorogo |
+|         2 | Cabang Jakarta  | Jakarta  |
+|         3 | Cabang Bandung  | Bandung  |
+|         4 | Cabang Kediri   | Kediri   |
++-----------+-----------------+----------+
+4 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT kota FROM tbl_pelanggan
+    -> UNION
+    -> SELECT kota FROM tbl_cabang;
++------------+
+| kota       |
++------------+
+| Ponorogo   |
+| Madiun     |
+| Surabaya   |
+| Solo       |
+| Malang     |
+| Semarang   |
+| Denpasar   |
+| Yogyakarta |
+| Jakarta    |
+| Medan      |
+| Bandung    |
+| Kediri     |
++------------+
+12 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT kota FROM tbl_pelanggan
+    -> UNION ALL
+    -> SELECT kota FROM tbl_cabang;
++------------+
+| kota       |
++------------+
+| Ponorogo   |
+| Madiun     |
+| Surabaya   |
+| Solo       |
+| Malang     |
+| Semarang   |
+| Denpasar   |
+| Yogyakarta |
+| Jakarta    |
+| Medan      |
+| Ponorogo   |
+| Jakarta    |
+| Bandung    |
+| Kediri     |
++------------+
+14 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> INSERT INTO tbl_pelanggan
+    -> (nama_pelanggan, kota)
+    -> VALUES
+    -> ('Salsa', 'Bandung');
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [db_tokoku]> select * from tbl_pelanggan;
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
+|           11 | Salsa          | Bandung    |
++--------------+----------------+------------+
+11 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT
+    ->     p.id_pelanggan,
+    ->     p.nama_pelanggan,
+    ->     t.id_transaksi,
+    ->     t.tanggal,
+    ->     t.total_belanja
+    -> FROM tbl_pelanggan p
+    -> LEFT JOIN tbl_transaksi t
+    ->     ON p.id_pelanggan = t.id_pelanggan;
++--------------+----------------+--------------+------------+---------------+
+| id_pelanggan | nama_pelanggan | id_transaksi | tanggal    | total_belanja |
++--------------+----------------+--------------+------------+---------------+
+|            1 | Andi           |            1 | 2026-10-01 |     250000.00 |
+|            1 | Andi           |            3 | 2026-10-03 |     150000.00 |
+|            1 | Andi           |           12 | 2026-10-12 |     200000.00 |
+|            2 | Budi           |            2 | 2026-10-02 |     350000.00 |
+|            2 | Budi           |           13 | 2026-10-13 |     375000.00 |
+|            3 | Citra          |            4 | 2026-10-04 |     500000.00 |
+|            3 | Citra          |           14 | 2026-10-14 |     825000.00 |
+|            4 | Joko           |            5 | 2026-10-05 |     275000.00 |
+|            4 | Joko           |           15 | 2026-10-15 |     150000.00 |
+|            5 | Rizky          |            6 | 2026-10-06 |     425000.00 |
+|            5 | Rizky          |           16 | 2026-10-16 |     290000.00 |
+|            6 | Dewi           |            7 | 2026-10-07 |     180000.00 |
+|            6 | Dewi           |           17 | 2026-10-17 |     475000.00 |
+|            7 | Nina           |            8 | 2026-10-08 |     650000.00 |
+|            7 | Nina           |           18 | 2026-10-18 |     900000.00 |
+|            8 | Rahma          |            9 | 2026-10-09 |     320000.00 |
+|            8 | Rahma          |           19 | 2026-10-19 |     225000.00 |
+|            9 | Fajar          |           10 | 2026-10-10 |     550000.00 |
+|            9 | Fajar          |           20 | 2026-10-20 |     600000.00 |
+|           10 | Putri          |           11 | 2026-10-11 |     750000.00 |
+|           11 | Salsa          |         NULL | NULL       |          NULL |
++--------------+----------------+--------------+------------+---------------+
+21 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT
+    ->     p.id_pelanggan,
+    ->     p.nama_pelanggan,
+    ->     p.kota
+    -> FROM tbl_pelanggan p
+    -> WHERE NOT EXISTS (
+    ->     SELECT 1
+    ->     FROM tbl_transaksi t
+    ->     WHERE t.id_pelanggan = p.id_pelanggan
+    -> );
++--------------+----------------+---------+
+| id_pelanggan | nama_pelanggan | kota    |
++--------------+----------------+---------+
+|           11 | Salsa          | Bandung |
++--------------+----------------+---------+
+1 row in set (0.001 sec)
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_transaksi
+    -> WHERE total_belanja > (
+    ->     SELECT AVG(total_belanja)
+    ->     FROM tbl_transaksi
+    -> );
++--------------+------------+--------------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | total_belanja |
++--------------+------------+--------------+---------------+
+|            4 | 2026-10-04 |            3 |     500000.00 |
+|            6 | 2026-10-06 |            5 |     425000.00 |
+|            8 | 2026-10-08 |            7 |     650000.00 |
+|           10 | 2026-10-10 |            9 |     550000.00 |
+|           11 | 2026-10-11 |           10 |     750000.00 |
+|           14 | 2026-10-14 |            3 |     825000.00 |
+|           17 | 2026-10-17 |            6 |     475000.00 |
+|           18 | 2026-10-18 |            7 |     900000.00 |
+|           20 | 2026-10-20 |            9 |     600000.00 |
++--------------+------------+--------------+---------------+
+9 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT
+    ->     p.id_pelanggan,
+    ->     p.nama_pelanggan,
+    ->     COUNT(t.id_transaksi) AS jumlah_transaksi
+    -> FROM tbl_pelanggan p
+    -> INNER JOIN tbl_transaksi t
+    ->     ON p.id_pelanggan = t.id_pelanggan
+    -> GROUP BY
+    ->     p.id_pelanggan,
+    ->     p.nama_pelanggan
+    -> ORDER BY jumlah_transaksi DESC
+    -> LIMIT 1;
++--------------+----------------+------------------+
+| id_pelanggan | nama_pelanggan | jumlah_transaksi |
++--------------+----------------+------------------+
+|            1 | Andi           |                3 |
++--------------+----------------+------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT
+    ->     p.id_pelanggan,
+    ->     p.nama_pelanggan,
+    ->     COUNT(t.id_transaksi) AS total_transaksi,
+    ->     COALESCE(SUM(t.total_belanja), 0) AS total_belanja
+    -> FROM tbl_pelanggan p
+    -> LEFT JOIN tbl_transaksi t
+    ->     ON p.id_pelanggan = t.id_pelanggan
+    -> GROUP BY
+    ->     p.id_pelanggan,
+    ->     p.nama_pelanggan;
++--------------+----------------+-----------------+---------------+
+| id_pelanggan | nama_pelanggan | total_transaksi | total_belanja |
++--------------+----------------+-----------------+---------------+
+|            1 | Andi           |               3 |     600000.00 |
+|            2 | Budi           |               2 |     725000.00 |
+|            3 | Citra          |               2 |    1325000.00 |
+|            4 | Joko           |               2 |     425000.00 |
+|            5 | Rizky          |               2 |     715000.00 |
+|            6 | Dewi           |               2 |     655000.00 |
+|            7 | Nina           |               2 |    1550000.00 |
+|            8 | Rahma          |               2 |     545000.00 |
+|            9 | Fajar          |               2 |    1150000.00 |
+|           10 | Putri          |               1 |     750000.00 |
+|           11 | Salsa          |               0 |          0.00 |
++--------------+----------------+-----------------+---------------+
+11 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_transaksi
+    -> ORDER BY total_belanja DESC
+    -> LIMIT 5;
++--------------+------------+--------------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | total_belanja |
++--------------+------------+--------------+---------------+
+|           18 | 2026-10-18 |            7 |     900000.00 |
+|           14 | 2026-10-14 |            3 |     825000.00 |
+|           11 | 2026-10-11 |           10 |     750000.00 |
+|            8 | 2026-10-08 |            7 |     650000.00 |
+|           20 | 2026-10-20 |            9 |     600000.00 |
++--------------+------------+--------------+---------------+
+5 rows in set (0.000 sec)
+
+|           11 | Salsa          |               0 |          0.00 |
++--------------+----------------+-----------------+---------------+
+11 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_transaksi
+    -> ORDER BY total_belanja DESC
+    -> LIMIT 5;
++--------------+------------+--------------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | total_belanja |
++--------------+------------+--------------+---------------+
+|           18 | 2026-10-18 |            7 |     900000.00 |
+|           14 | 2026-10-14 |            3 |     825000.00 |
+|           11 | 2026-10-11 |           10 |     750000.00 |
+|            8 | 2026-10-08 |            7 |     650000.00 |
+|           20 | 2026-10-20 |            9 |     600000.00 |
++--------------+------------+--------------+---------------+
+5 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT kota FROM tbl_pelanggan
+    -> UNION
+    -> SELECT kota FROM tbl_cabang;
++------------+
+| kota       |
++------------+
+| Ponorogo   |
+| Madiun     |
+| Surabaya   |
+| Solo       |
+| Malang     |
+| Semarang   |
+| Denpasar   |
+| Yogyakarta |
+| Jakarta    |
+| Medan      |
+| Bandung    |
+| Kediri     |
++------------+
+12 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT kota FROM tbl_pelanggan
+    -> UNION ALL
+    -> SELECT kota FROM tbl_cabang;
++------------+
+| kota       |
++------------+
+| Ponorogo   |
+| Madiun     |
+| Surabaya   |
+| Solo       |
+| Malang     |
+| Semarang   |
+| Denpasar   |
+| Yogyakarta |
+| Jakarta    |
+| Medan      |
+| Bandung    |
+| Ponorogo   |
+| Jakarta    |
+| Bandung    |
+| Kediri     |
++------------+
+15 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM tbl_pelanggan;
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
+|           11 | Salsa          | Bandung    |
++--------------+----------------+------------+
+11 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> CALL TampilPelanggan();
+ERROR 1305 (42000): PROCEDURE db_tokoku.TampilPelanggan does not exist
+MariaDB [db_tokoku]> SHOW PROCEDURE STATUS
+    -> WHERE Db = 'db_tokoku';
+Empty set (0.007 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE PROCEDURE TampilPelanggan()
+    -> BEGIN
+    ->     SELECT * FROM tbl_pelanggan;
+    -> END //
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> CALL TampilPelanggan();
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
+|           11 | Salsa          | Bandung    |
++--------------+----------------+------------+
+11 rows in set (0.000 sec)
+
+Query OK, 0 rows affected (0.008 sec)
+
+MariaDB [db_tokoku]> DROP PROCEDURE IF EXISTS CariPelanggan;
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE PROCEDURE CariPelanggan(
+    ->     IN p_id INT
+    -> )
+    -> BEGIN
+    ->     SELECT *
+    ->     FROM tbl_pelanggan
+    ->     WHERE id_pelanggan = p_id;
+    -> END //
+Query OK, 0 rows affected (0.007 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> CALL CariPelanggan(1);
++--------------+----------------+----------+
+| id_pelanggan | nama_pelanggan | kota     |
++--------------+----------------+----------+
+|            1 | Andi           | Ponorogo |
++--------------+----------------+----------+
+1 row in set (0.000 sec)
+
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [db_tokoku]> DROP PROCEDURE IF EXISTS TambahPelanggan;
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE PROCEDURE TambahPelanggan(
+    ->     IN p_nama VARCHAR(100),
+    ->     IN p_kota VARCHAR(50)
+    -> )
+    -> BEGIN
+    ->     INSERT INTO tbl_pelanggan
+    ->     (nama_pelanggan, kota)
+    ->     VALUES
+    ->     (p_nama, p_kota);
+    -> END //
+Query OK, 0 rows affected (0.004 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> CALL TambahPelanggan(
+    ->     'Dewi',
+    ->     'Ponorogo'
+    -> );
+Query OK, 1 row affected (0.003 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM tbl_pelanggan;
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
+|           11 | Salsa          | Bandung    |
+|           12 | Dewi           | Ponorogo   |
++--------------+----------------+------------+
+12 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DROP PROCEDURE IF EXISTS HitungPelanggan;
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE PROCEDURE HitungPelanggan(
+    ->     OUT jumlah INT
+    -> )
+    -> BEGIN
+    ->     SELECT COUNT(*)
+    ->     INTO jumlah
+    ->     FROM tbl_pelanggan;
+    -> END //
+Query OK, 0 rows affected (0.004 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> CALL HitungPelanggan(@total);
+Query OK, 1 row affected (0.000 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> SELECT @total;
++--------+
+| @total |
++--------+
+|     12 |
++--------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> DROP PROCEDURE IF EXISTS LaporanTransaksi;
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE PROCEDURE LaporanTransaksi(
+    ->     IN p_id_pelanggan INT
+    -> )
+    -> BEGIN
+    ->     SELECT
+    ->         t.id_transaksi,
+    ->         t.tanggal,
+    ->         p.id_pelanggan,
+    ->         p.nama_pelanggan,
+    ->         p.kota,
+    ->         t.total_belanja
+    ->     FROM tbl_transaksi t
+    ->     INNER JOIN tbl_pelanggan p
+    ->         ON t.id_pelanggan = p.id_pelanggan
+    ->     WHERE p.id_pelanggan = p_id_pelanggan;
+    -> END //
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> CALL LaporanTransaksi(1);
++--------------+------------+--------------+----------------+----------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | nama_pelanggan | kota     | total_belanja |
++--------------+------------+--------------+----------------+----------+---------------+
+|            1 | 2026-10-01 |            1 | Andi           | Ponorogo |     250000.00 |
+|            3 | 2026-10-03 |            1 | Andi           | Ponorogo |     150000.00 |
+|           12 | 2026-10-12 |            1 | Andi           | Ponorogo |     200000.00 |
++--------------+------------+--------------+----------------+----------+---------------+
+3 rows in set (0.001 sec)
+
+Query OK, 0 rows affected (0.004 sec)
+
+MariaDB [db_tokoku]> CALL LaporanTransaksi(2);
++--------------+------------+--------------+----------------+--------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | nama_pelanggan | kota   | total_belanja |
++--------------+------------+--------------+----------------+--------+---------------+
+|            2 | 2026-10-02 |            2 | Budi           | Madiun |     350000.00 |
+|           13 | 2026-10-13 |            2 | Budi           | Madiun |     375000.00 |
++--------------+------------+--------------+----------------+--------+---------------+
+2 rows in set (0.000 sec)
+
+Query OK, 0 rows affected (0.003 sec)
+
+MariaDB [db_tokoku]> SHOW PROCEDURE STATUS
+    -> WHERE Db = 'db_tokoku';
++-----------+------------------+-----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| Db        | Name             | Type      | Definer        | Modified            | Created             | Security_type | Comment | character_set_client | collation_connection | Database Collation |
++-----------+------------------+-----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| db_tokoku | CariPelanggan    | PROCEDURE | root@localhost | 2026-11-09 10:01:04 | 2026-11-09 10:01:04 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | HitungPelanggan  | PROCEDURE | root@localhost | 2026-11-09 10:02:11 | 2026-11-09 10:02:11 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | LaporanTransaksi | PROCEDURE | root@localhost | 2026-11-09 10:02:31 | 2026-11-09 10:02:31 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | TambahPelanggan  | PROCEDURE | root@localhost | 2026-11-09 10:01:36 | 2026-11-09 10:01:36 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | TampilPelanggan  | PROCEDURE | root@localhost | 2026-11-09 09:59:43 | 2026-11-09 09:59:43 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-----------+------------------+-----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+5 rows in set (0.016 sec)
+
+MariaDB [db_tokoku]> DROP PROCEDURE IF EXISTS TampilPelanggan;
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE PROCEDURE TampilPelanggan()
+    -> BEGIN
+    ->     SELECT * FROM tbl_pelanggan;
+    -> END //
+Query OK, 0 rows affected (0.003 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> CALL TampilPelanggan();
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
+|           11 | Salsa          | Bandung    |
+|           12 | Dewi           | Ponorogo   |
++--------------+----------------+------------+
+12 rows in set (0.000 sec)
+
+Query OK, 0 rows affected (0.008 sec)
+
+MariaDB [db_tokoku]> CALL TampilPelanggan();
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
+|           11 | Salsa          | Bandung    |
+|           12 | Dewi           | Ponorogo   |
++--------------+----------------+------------+
+12 rows in set (0.000 sec)
+
+Query OK, 0 rows affected (0.008 sec)
+
+MariaDB [db_tokoku]> SELECT HitungPajak(1000000);
+ERROR 1305 (42000): FUNCTION db_tokoku.HitungPajak does not exist
+MariaDB [db_tokoku]> SHOW FUNCTION STATUS
+    -> WHERE Db = 'db_tokoku';
+Empty set (0.009 sec)
+
+MariaDB [db_tokoku]> DROP FUNCTION IF EXISTS HitungPajak;
+Query OK, 0 rows affected, 1 warning (0.007 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE FUNCTION HitungPajak(
+    ->     p_harga DECIMAL(12,2)
+    -> )
+    -> RETURNS DECIMAL(12,2)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     RETURN p_harga * 0.11;
+    -> END //
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT HitungPajak(1000000) AS pajak;
++-----------+
+| pajak     |
++-----------+
+| 110000.00 |
++-----------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SHOW FUNCTION STATUS
+    -> WHERE Db = 'db_tokoku';
++-----------+-------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| Db        | Name        | Type     | Definer        | Modified            | Created             | Security_type | Comment | character_set_client | collation_connection | Database Collation |
++-----------+-------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| db_tokoku | HitungPajak | FUNCTION | root@localhost | 2026-11-09 10:52:13 | 2026-11-09 10:52:13 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-----------+-------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+1 row in set (0.009 sec)
+
+MariaDB [db_tokoku]> DROP FUNCTION IF EXISTS HitungDiskon;
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE FUNCTION HitungDiskon(
+    ->     p_harga DECIMAL(12,2),
+    ->     p_diskon DECIMAL(5,2)
+    -> )
+    -> RETURNS DECIMAL(12,2)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     RETURN p_harga - (p_harga * p_diskon / 100);
+    -> END //
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT HitungDiskon(200000, 10)
+    -> AS harga_setelah_diskon;
++----------------------+
+| harga_setelah_diskon |
++----------------------+
+|            180000.00 |
++----------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> DROP FUNCTION IF EXISTS HitungTotal;
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE FUNCTION HitungTotal(
+    ->     p_harga DECIMAL(12,2),
+    ->     p_jumlah INT
+    -> )
+    -> RETURNS DECIMAL(12,2)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     RETURN p_harga * p_jumlah;
+    -> END //
+Query OK, 0 rows affected (0.004 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT HitungTotal(50000, 5)
+    -> AS total_harga;
++-------------+
+| total_harga |
++-------------+
+|   250000.00 |
++-------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> DROP FUNCTION IF EXISTS HitungPajak;
+Query OK, 0 rows affected (0.007 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE FUNCTION HitungPajak(
+    ->     p_harga DECIMAL(12,2)
+    -> )
+    -> RETURNS DECIMAL(12,2)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     RETURN p_harga * 0.11;
+    -> END //
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT HitungPajak(1000000)
+    -> AS pajak;
++-----------+
+| pajak     |
++-----------+
+| 110000.00 |
++-----------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> DROP FUNCTION IF EXISTS KategoriBelanja;
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE FUNCTION KategoriBelanja(
+    ->     p_total DECIMAL(12,2)
+    -> )
+    -> RETURNS VARCHAR(30)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     RETURN CASE
+    ->         WHEN p_total >= 1000000 THEN 'Pelanggan Gold'
+    ->         WHEN p_total >= 500000 THEN 'Pelanggan Silver'
+    ->         ELSE 'Pelanggan Reguler'
+    ->     END;
+    -> END //
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT KategoriBelanja(1500000)
+    -> AS kategori;
++----------------+
+| kategori       |
++----------------+
+| Pelanggan Gold |
++----------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT KategoriBelanja(750000)
+    -> AS kategori;
++------------------+
+| kategori         |
++------------------+
+| Pelanggan Silver |
++------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT KategoriBelanja(250000)
+    -> AS kategori;
++-------------------+
+| kategori          |
++-------------------+
+| Pelanggan Reguler |
++-------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT
+    ->     p.nama_pelanggan,
+    ->     COALESCE(SUM(t.total_belanja), 0)
+    ->         AS total_belanja,
+    ->     KategoriBelanja(
+    ->         COALESCE(SUM(t.total_belanja), 0)
+    ->     ) AS kategori
+    -> FROM tbl_pelanggan p
+    -> LEFT JOIN tbl_transaksi t
+    ->     ON p.id_pelanggan = t.id_pelanggan
+    -> GROUP BY
+    ->     p.id_pelanggan,
+    ->     p.nama_pelanggan;
++----------------+---------------+-------------------+
+| nama_pelanggan | total_belanja | kategori          |
++----------------+---------------+-------------------+
+| Andi           |     600000.00 | Pelanggan Silver  |
+| Budi           |     725000.00 | Pelanggan Silver  |
+| Citra          |    1325000.00 | Pelanggan Gold    |
+| Joko           |     425000.00 | Pelanggan Reguler |
+| Rizky          |     715000.00 | Pelanggan Silver  |
+| Dewi           |     655000.00 | Pelanggan Silver  |
+| Nina           |    1550000.00 | Pelanggan Gold    |
+| Rahma          |     545000.00 | Pelanggan Silver  |
+| Fajar          |    1150000.00 | Pelanggan Gold    |
+| Putri          |     750000.00 | Pelanggan Silver  |
+| Salsa          |          0.00 | Pelanggan Reguler |
+| Dewi           |          0.00 | Pelanggan Reguler |
++----------------+---------------+-------------------+
+12 rows in set (0.001 sec)
+
+
+    ->     ON p.id_pelanggan = t.id_pelanggan
+    -> GROUP BY
+    ->     p.id_pelanggan,
+    ->     p.nama_pelanggan;
++----------------+---------------+-------------------+
+| nama_pelanggan | total_belanja | kategori          |
++----------------+---------------+-------------------+
+| Andi           |     600000.00 | Pelanggan Silver  |
+| Budi           |     725000.00 | Pelanggan Silver  |
+| Citra          |    1325000.00 | Pelanggan Gold    |
+| Joko           |     425000.00 | Pelanggan Reguler |
+| Rizky          |     715000.00 | Pelanggan Silver  |
+| Dewi           |     655000.00 | Pelanggan Silver  |
+| Nina           |    1550000.00 | Pelanggan Gold    |
+| Rahma          |     545000.00 | Pelanggan Silver  |
+| Fajar          |    1150000.00 | Pelanggan Gold    |
+| Putri          |     750000.00 | Pelanggan Silver  |
+| Salsa          |          0.00 | Pelanggan Reguler |
+| Dewi           |          0.00 | Pelanggan Reguler |
++----------------+---------------+-------------------+
+12 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> DROP FUNCTION IF EXISTS KonversiNilai;
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE FUNCTION KonversiNilai(
+    ->     p_nilai INT
+    -> )
+    -> RETURNS VARCHAR(10)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     RETURN CASE
+    ->         WHEN p_nilai >= 90 THEN 'A'
+    ->         WHEN p_nilai >= 80 THEN 'B'
+    ->         WHEN p_nilai >= 70 THEN 'C'
+    ->         WHEN p_nilai >= 60 THEN 'D'
+    ->         ELSE 'E'
+    ->     END;
+    -> END //
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT KonversiNilai(95)
+    -> AS nilai_huruf;
++-------------+
+| nilai_huruf |
++-------------+
+| A           |
++-------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT KonversiNilai(85)
+    -> AS nilai_huruf;
++-------------+
+| nilai_huruf |
++-------------+
+| B           |
++-------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT KonversiNilai(75)
+    -> AS nilao_huruf;
++-------------+
+| nilao_huruf |
++-------------+
+| C           |
++-------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT KonversiNilai(55)
+    -> AS nilai_huruf;
++-------------+
+| nilai_huruf |
++-------------+
+| E           |
++-------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SHOW FUNCTION STATUS
+    -> WHERE Db = 'db_tokoku';
++-----------+-----------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| Db        | Name            | Type     | Definer        | Modified            | Created             | Security_type | Comment | character_set_client | collation_connection | Database Collation |
++-----------+-----------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| db_tokoku | HitungDiskon    | FUNCTION | root@localhost | 2026-11-09 10:52:51 | 2026-11-09 10:52:51 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | HitungPajak     | FUNCTION | root@localhost | 2026-11-09 10:53:29 | 2026-11-09 10:53:29 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | HitungTotal     | FUNCTION | root@localhost | 2026-11-09 10:53:07 | 2026-11-09 10:53:07 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | KategoriBelanja | FUNCTION | root@localhost | 2026-11-09 10:53:42 | 2026-11-09 10:53:42 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | KonversiNilai   | FUNCTION | root@localhost | 2026-11-09 10:54:36 | 2026-11-09 10:54:36 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-----------+-----------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+5 rows in set (0.011 sec)
+
+MariaDB [db_tokoku]> DROP FUNCTION IF EXISTS HitungDiskon;
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE FUNCTION HitungDiskon(
+    ->     p_harga DECIMAL(12,2),
+    ->     p_diskon DECIMAL(5,2)
+    -> )
+    -> RETURNS DECIMAL(12,2)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     RETURN p_harga - (p_harga * p_diskon / 100);
+    -> END //
+Query OK, 0 rows affected (0.004 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT HitungDiskon(200000, 10)
+    -> AS harga_setelah_diskon;
++----------------------+
+| harga_setelah_diskon |
++----------------------+
+|            180000.00 |
++----------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> show tables;
++--------------------------+
+| Tables_in_db_tokoku      |
++--------------------------+
+| tbl_cabang               |
+| tbl_detail_transaksi     |
+| tbl_pelanggan            |
+| tbl_transaksi            |
+| view_pelanggan           |
+| view_total_belanja       |
+| view_transaksi_pelanggan |
++--------------------------+
+7 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> desc tbl_cabang;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id_cabang   | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nama_cabang | varchar(100) | YES  |     | NULL    |                |
+| kota        | varchar(50)  | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+3 rows in set (0.009 sec)
+
+MariaDB [db_tokoku]> select * from tbl_cabang;
++-----------+-----------------+----------+
+| id_cabang | nama_cabang     | kota     |
++-----------+-----------------+----------+
+|         1 | Cabang Ponorogo | Ponorogo |
+|         2 | Cabang Jakarta  | Jakarta  |
+|         3 | Cabang Bandung  | Bandung  |
+|         4 | Cabang Kediri   | Kediri   |
++-----------+-----------------+----------+
+4 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> desc tbl_detail_transaksi;
++--------------+---------------+------+-----+---------+----------------+
+| Field        | Type          | Null | Key | Default | Extra          |
++--------------+---------------+------+-----+---------+----------------+
+| id_detail    | int(11)       | NO   | PRI | NULL    | auto_increment |
+| id_transaksi | int(11)       | YES  | MUL | NULL    |                |
+| nama_produk  | varchar(100)  | YES  |     | NULL    |                |
+| jumlah       | int(11)       | YES  |     | NULL    |                |
+| harga        | decimal(12,2) | YES  |     | NULL    |                |
++--------------+---------------+------+-----+---------+----------------+
+5 rows in set (0.008 sec)
+
+MariaDB [db_tokoku]> select * from tbl_detail_transaksi;
++-----------+--------------+---------------+--------+----------+
+| id_detail | id_transaksi | nama_produk   | jumlah | harga    |
++-----------+--------------+---------------+--------+----------+
+|         1 |            1 | Beras 5 Kg    |      2 | 75000.00 |
+|         2 |            1 | Minyak Goreng |      1 | 25000.00 |
+|         3 |            2 | Gula Pasir    |      3 | 15000.00 |
+|         4 |            2 | Teh Celup     |      2 | 12000.00 |
+|         5 |            3 | Kopi Bubuk    |      2 | 18000.00 |
+|         6 |            4 | Susu Kotak    |      5 | 10000.00 |
+|         7 |            5 | Mi Instan     |     10 |  3500.00 |
+|         8 |            6 | Sabun Mandi   |      4 |  8000.00 |
+|         9 |            7 | Telur Ayam    |      2 | 30000.00 |
+|        10 |            8 | Tepung Terigu |      3 | 12000.00 |
++-----------+--------------+---------------+--------+----------+
+10 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> show tables;
++--------------------------+
+| Tables_in_db_tokoku      |
++--------------------------+
+| tbl_cabang               |
+| tbl_detail_transaksi     |
+| tbl_pelanggan            |
+| tbl_transaksi            |
+| view_pelanggan           |
+| view_total_belanja       |
+| view_transaksi_pelanggan |
++--------------------------+
+7 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> desc tbl_pelanggan;
++----------------+--------------+------+-----+---------+----------------+
+| Field          | Type         | Null | Key | Default | Extra          |
++----------------+--------------+------+-----+---------+----------------+
+| id_pelanggan   | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nama_pelanggan | varchar(100) | YES  |     | NULL    |                |
+| kota           | varchar(50)  | YES  |     | NULL    |                |
++----------------+--------------+------+-----+---------+----------------+
+3 rows in set (0.009 sec)
+
+MariaDB [db_tokoku]> select * from tbl_pelanggan;
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
+|           11 | Salsa          | Bandung    |
+|           12 | Dewi           | Ponorogo   |
++--------------+----------------+------------+
+12 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> desc tbl_transaksi;
++---------------+---------------+------+-----+---------+----------------+
+| Field         | Type          | Null | Key | Default | Extra          |
++---------------+---------------+------+-----+---------+----------------+
+| id_transaksi  | int(11)       | NO   | PRI | NULL    | auto_increment |
+| tanggal       | date          | YES  |     | NULL    |                |
+| id_pelanggan  | int(11)       | YES  | MUL | NULL    |                |
+| total_belanja | decimal(12,2) | YES  |     | NULL    |                |
++---------------+---------------+------+-----+---------+----------------+
+4 rows in set (0.008 sec)
+
+MariaDB [db_tokoku]> select * from tbl_transaksi;
++--------------+------------+--------------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | total_belanja |
++--------------+------------+--------------+---------------+
+|            1 | 2026-10-01 |            1 |     250000.00 |
+|            2 | 2026-10-02 |            2 |     350000.00 |
+|            3 | 2026-10-03 |            1 |     150000.00 |
+|            4 | 2026-10-04 |            3 |     500000.00 |
+|            5 | 2026-10-05 |            4 |     275000.00 |
+|            6 | 2026-10-06 |            5 |     425000.00 |
+|            7 | 2026-10-07 |            6 |     180000.00 |
+|            8 | 2026-10-08 |            7 |     650000.00 |
+|            9 | 2026-10-09 |            8 |     320000.00 |
+|           10 | 2026-10-10 |            9 |     550000.00 |
+|           11 | 2026-10-11 |           10 |     750000.00 |
+|           12 | 2026-10-12 |            1 |     200000.00 |
+|           13 | 2026-10-13 |            2 |     375000.00 |
+|           14 | 2026-10-14 |            3 |     825000.00 |
+|           15 | 2026-10-15 |            4 |     150000.00 |
+|           16 | 2026-10-16 |            5 |     290000.00 |
+|           17 | 2026-10-17 |            6 |     475000.00 |
+|           18 | 2026-10-18 |            7 |     900000.00 |
+|           19 | 2026-10-19 |            8 |     225000.00 |
+|           20 | 2026-10-20 |            9 |     600000.00 |
++--------------+------------+--------------+---------------+
+20 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> show tables;
++--------------------------+
+| Tables_in_db_tokoku      |
++--------------------------+
+| tbl_cabang               |
+| tbl_detail_transaksi     |
+| tbl_pelanggan            |
+| tbl_transaksi            |
+| view_pelanggan           |
+| view_total_belanja       |
+| view_transaksi_pelanggan |
++--------------------------+
+7 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> desc view_pelanggan;
++----------------+--------------+------+-----+---------+-------+
+| Field          | Type         | Null | Key | Default | Extra |
++----------------+--------------+------+-----+---------+-------+
+| id_pelanggan   | int(11)      | NO   |     | 0       |       |
+| nama_pelanggan | varchar(100) | YES  |     | NULL    |       |
+| kota           | varchar(50)  | YES  |     | NULL    |       |
++----------------+--------------+------+-----+---------+-------+
+3 rows in set (0.010 sec)
+
+MariaDB [db_tokoku]> select * from view_pelanggan;
++--------------+----------------+------------+
+| id_pelanggan | nama_pelanggan | kota       |
++--------------+----------------+------------+
+|            1 | Andi           | Ponorogo   |
+|            2 | Budi           | Madiun     |
+|            3 | Citra          | Surabaya   |
+|            4 | Joko           | Solo       |
+|            5 | Rizky          | Malang     |
+|            6 | Dewi           | Semarang   |
+|            7 | Nina           | Denpasar   |
+|            8 | Rahma          | Yogyakarta |
+|            9 | Fajar          | Jakarta    |
+|           10 | Putri          | Medan      |
+|           11 | Salsa          | Bandung    |
+|           12 | Dewi           | Ponorogo   |
++--------------+----------------+------------+
+12 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> desc view_total_belanja;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| id_pelanggan    | int(11)       | NO   |     | 0       |       |
+| nama_pelanggan  | varchar(100)  | YES  |     | NULL    |       |
+| total_transaksi | bigint(21)    | NO   |     | 0       |       |
+| total_belanja   | decimal(34,2) | YES  |     | NULL    |       |
++-----------------+---------------+------+-----+---------+-------+
+4 rows in set (0.008 sec)
+
+MariaDB [db_tokoku]> select * from view_total_belanja;
++--------------+----------------+-----------------+---------------+
+| id_pelanggan | nama_pelanggan | total_transaksi | total_belanja |
++--------------+----------------+-----------------+---------------+
+|            1 | Andi           |               3 |     600000.00 |
+|            2 | Budi           |               2 |     725000.00 |
+|            3 | Citra          |               2 |    1325000.00 |
+|            4 | Joko           |               2 |     425000.00 |
+|            5 | Rizky          |               2 |     715000.00 |
+|            6 | Dewi           |               2 |     655000.00 |
+|            7 | Nina           |               2 |    1550000.00 |
+|            8 | Rahma          |               2 |     545000.00 |
+|            9 | Fajar          |               2 |    1150000.00 |
+|           10 | Putri          |               1 |     750000.00 |
+|           11 | Salsa          |               0 |          0.00 |
+|           12 | Dewi           |               0 |          0.00 |
++--------------+----------------+-----------------+---------------+
+12 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> desc view_transaksi_pelanggan;
++----------------+---------------+------+-----+---------+-------+
+| Field          | Type          | Null | Key | Default | Extra |
++----------------+---------------+------+-----+---------+-------+
+| id_transaksi   | int(11)       | NO   |     | 0       |       |
+| tanggal        | date          | YES  |     | NULL    |       |
+| nama_pelanggan | varchar(100)  | YES  |     | NULL    |       |
+| kota           | varchar(50)   | YES  |     | NULL    |       |
+| total_belanja  | decimal(12,2) | YES  |     | NULL    |       |
++----------------+---------------+------+-----+---------+-------+
+5 rows in set (0.008 sec)
+
+MariaDB [db_tokoku]> select * from view_transaksi_pelanggan;
++--------------+------------+----------------+------------+---------------+
+| id_transaksi | tanggal    | nama_pelanggan | kota       | total_belanja |
++--------------+------------+----------------+------------+---------------+
+|            1 | 2026-10-01 | Andi           | Ponorogo   |     250000.00 |
+|            2 | 2026-10-02 | Budi           | Madiun     |     350000.00 |
+|            3 | 2026-10-03 | Andi           | Ponorogo   |     150000.00 |
+|            4 | 2026-10-04 | Citra          | Surabaya   |     500000.00 |
+|            5 | 2026-10-05 | Joko           | Solo       |     275000.00 |
+|            6 | 2026-10-06 | Rizky          | Malang     |     425000.00 |
+|            7 | 2026-10-07 | Dewi           | Semarang   |     180000.00 |
+|            8 | 2026-10-08 | Nina           | Denpasar   |     650000.00 |
+|            9 | 2026-10-09 | Rahma          | Yogyakarta |     320000.00 |
+|           10 | 2026-10-10 | Fajar          | Jakarta    |     550000.00 |
+|           11 | 2026-10-11 | Putri          | Medan      |     750000.00 |
+|           12 | 2026-10-12 | Andi           | Ponorogo   |     200000.00 |
+|           13 | 2026-10-13 | Budi           | Madiun     |     375000.00 |
+|           14 | 2026-10-14 | Citra          | Surabaya   |     825000.00 |
+|           15 | 2026-10-15 | Joko           | Solo       |     150000.00 |
+|           16 | 2026-10-16 | Rizky          | Malang     |     290000.00 |
+|           17 | 2026-10-17 | Dewi           | Semarang   |     475000.00 |
+|           18 | 2026-10-18 | Nina           | Denpasar   |     900000.00 |
+|           19 | 2026-10-19 | Rahma          | Yogyakarta |     225000.00 |
+|           20 | 2026-10-20 | Fajar          | Jakarta    |     600000.00 |
++--------------+------------+----------------+------------+---------------+
+20 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SHOW PROCEDURE STATUS WHERE Db = 'db_tokoku';
++-----------+------------------+-----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| Db        | Name             | Type      | Definer        | Modified            | Created             | Security_type | Comment | character_set_client | collation_connection | Database Collation |
++-----------+------------------+-----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| db_tokoku | CariPelanggan    | PROCEDURE | root@localhost | 2026-11-09 10:01:04 | 2026-11-09 10:01:04 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | HitungPelanggan  | PROCEDURE | root@localhost | 2026-11-09 10:02:11 | 2026-11-09 10:02:11 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | LaporanTransaksi | PROCEDURE | root@localhost | 2026-11-09 10:02:31 | 2026-11-09 10:02:31 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | TambahPelanggan  | PROCEDURE | root@localhost | 2026-11-09 10:01:36 | 2026-11-09 10:01:36 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | TampilPelanggan  | PROCEDURE | root@localhost | 2026-11-09 10:08:09 | 2026-11-09 10:08:09 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-----------+------------------+-----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+5 rows in set (0.011 sec)
+
+MariaDB [db_tokoku]> SHOW FUNCTION STATUS WHERE Db = 'db_tokoku';
++-----------+-----------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| Db        | Name            | Type     | Definer        | Modified            | Created             | Security_type | Comment | character_set_client | collation_connection | Database Collation |
++-----------+-----------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| db_tokoku | HitungDiskon    | FUNCTION | root@localhost | 2026-11-09 10:57:16 | 2026-11-09 10:57:16 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | HitungPajak     | FUNCTION | root@localhost | 2026-11-09 10:53:29 | 2026-11-09 10:53:29 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | HitungTotal     | FUNCTION | root@localhost | 2026-11-09 10:53:07 | 2026-11-09 10:53:07 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | KategoriBelanja | FUNCTION | root@localhost | 2026-11-09 10:53:42 | 2026-11-09 10:53:42 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | KonversiNilai   | FUNCTION | root@localhost | 2026-11-09 10:54:36 | 2026-11-09 10:54:36 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-----------+-----------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+5 rows in set (0.010 sec)
+
+MariaDB [db_tokoku]> SHOW TRIGGERS;
+Empty set (0.008 sec)
+
+MariaDB [db_tokoku]> CREATE TABLE log_pelanggan (
+    ->     id_log INT AUTO_INCREMENT PRIMARY KEY,
+    ->     aktivitas VARCHAR(50),
+    ->     id_pelanggan INT,
+    ->     waktu TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    -> );
+Query OK, 0 rows affected (0.010 sec)
+
+MariaDB [db_tokoku]> desc log_pelanggan;
++--------------+-------------+------+-----+---------------------+----------------+
+| Field        | Type        | Null | Key | Default             | Extra          |
++--------------+-------------+------+-----+---------------------+----------------+
+| id_log       | int(11)     | NO   | PRI | NULL                | auto_increment |
+| aktivitas    | varchar(50) | YES  |     | NULL                |                |
+| id_pelanggan | int(11)     | YES  |     | NULL                |                |
+| waktu        | timestamp   | NO   |     | current_timestamp() |                |
++--------------+-------------+------+-----+---------------------+----------------+
+4 rows in set (0.009 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE TRIGGER after_insert_pelanggan
+    -> AFTER INSERT ON tbl_pelanggan
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    ->     INSERT INTO log_pelanggan
+    ->     (aktivitas, id_pelanggan)
+    ->     VALUES
+    ->     ('INSERT PELANGGAN', NEW.id_pelanggan);
+    ->
+    -> END //
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> INSERT INTO tbl_pelanggan
+    -> (nama_pelanggan, kota)
+    -> VALUES
+    -> ('Pelanggan Uji Bab 5', 'Ponorogo');
+Query OK, 1 row affected (0.006 sec)
+
+MariaDB [db_tokoku]> select * from tbl_pelanggan;
++--------------+---------------------+------------+
+| id_pelanggan | nama_pelanggan      | kota       |
++--------------+---------------------+------------+
+|            1 | Andi                | Ponorogo   |
+|            2 | Budi                | Madiun     |
+|            3 | Citra               | Surabaya   |
+|            4 | Joko                | Solo       |
+|            5 | Rizky               | Malang     |
+|            6 | Dewi                | Semarang   |
+|            7 | Nina                | Denpasar   |
+|            8 | Rahma               | Yogyakarta |
+|            9 | Fajar               | Jakarta    |
+|           10 | Putri               | Medan      |
+|           11 | Salsa               | Bandung    |
+|           12 | Dewi                | Ponorogo   |
+|           13 | Pelanggan Uji Bab 5 | Ponorogo   |
++--------------+---------------------+------------+
+13 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM tbl_pelanggan
+    -> ORDER BY id_pelanggan DESC
+    -> LIMIT 5;
++--------------+---------------------+----------+
+| id_pelanggan | nama_pelanggan      | kota     |
++--------------+---------------------+----------+
+|           13 | Pelanggan Uji Bab 5 | Ponorogo |
+|           12 | Dewi                | Ponorogo |
+|           11 | Salsa               | Bandung  |
+|           10 | Putri               | Medan    |
+|            9 | Fajar               | Jakarta  |
++--------------+---------------------+----------+
+5 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM log_pelanggan;
++--------+------------------+--------------+---------------------+
+| id_log | aktivitas        | id_pelanggan | waktu               |
++--------+------------------+--------------+---------------------+
+|      1 | INSERT PELANGGAN |           13 | 2026-11-09 11:24:01 |
++--------+------------------+--------------+---------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> CREATE TABLE log_perubahan_pelanggan (
+    ->     id_log INT AUTO_INCREMENT PRIMARY KEY,
+    ->     id_pelanggan INT,
+    ->     nama_lama VARCHAR(100),
+    ->     nama_baru VARCHAR(100),
+    ->     waktu TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    -> );
+Query OK, 0 rows affected (0.011 sec)
+
+MariaDB [db_tokoku]> DESC log_perubahan_pelanggan;
++--------------+--------------+------+-----+---------------------+----------------+
+| Field        | Type         | Null | Key | Default             | Extra          |
++--------------+--------------+------+-----+---------------------+----------------+
+| id_log       | int(11)      | NO   | PRI | NULL                | auto_increment |
+| id_pelanggan | int(11)      | YES  |     | NULL                |                |
+| nama_lama    | varchar(100) | YES  |     | NULL                |                |
+| nama_baru    | varchar(100) | YES  |     | NULL                |                |
+| waktu        | timestamp    | NO   |     | current_timestamp() |                |
++--------------+--------------+------+-----+---------------------+----------------+
+5 rows in set (0.009 sec)
+
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE TRIGGER after_update_pelanggan
+    -> AFTER UPDATE ON tbl_pelanggan
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    ->     INSERT INTO log_perubahan_pelanggan
+    ->     (
+    ->         id_pelanggan,
+    ->         nama_lama,
+    ->         nama_baru
+    ->     )
+    ->     VALUES
+    ->     (
+    ->         OLD.id_pelanggan,
+    ->         OLD.nama_pelanggan,
+    ->         NEW.nama_pelanggan
+    ->     );
+    ->
+    -> END //
+Query OK, 0 rows affected (0.007 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT id_pelanggan
+    -> FROM tbl_pelanggan
+    -> WHERE nama_pelanggan = 'Pelanggan Uji Bab 5';
++--------------+
+| id_pelanggan |
++--------------+
+|           13 |
++--------------+
+1 row in set (0.003 sec)
+
+MariaDB [db_tokoku]> SELECT id_pelanggan
+    -> INTO @id_uji
+    -> FROM tbl_pelanggan
+    -> WHERE nama_pelanggan = 'Pelanggan Uji Bab 5'
+    -> ORDER BY id_pelanggan DESC
+    -> LIMIT 1;
+Query OK, 1 row affected (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT @id_uji;
++---------+
+| @id_uji |
++---------+
+|      13 |
++---------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> UPDATE tbl_pelanggan
+    -> SET nama_pelanggan = 'Pelanggan Update Bab 5'
+    -> WHERE id_pelanggan = @id_uji;
+Query OK, 1 row affected (0.002 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_pelanggan
+    -> WHERE id_pelanggan = @id_uji;
++--------------+------------------------+----------+
+| id_pelanggan | nama_pelanggan         | kota     |
++--------------+------------------------+----------+
+|           13 | Pelanggan Update Bab 5 | Ponorogo |
++--------------+------------------------+----------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> Bye
+
+AIO RPL@DESKTOP-IADQQDU c:\xampp
+# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 41
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> use db_tokoku;
+Database changed
+MariaDB [db_tokoku]> SELECT *
+    -> FROM log_perubahan_pelanggan;
++--------+--------------+---------------------+------------------------+---------------------+
+| id_log | id_pelanggan | nama_lama           | nama_baru              | waktu               |
++--------+--------------+---------------------+------------------------+---------------------+
+|      1 |           13 | Pelanggan Uji Bab 5 | Pelanggan Update Bab 5 | 2026-11-09 11:25:12 |
++--------+--------------+---------------------+------------------------+---------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE TRIGGER before_insert_transaksi
+    -> BEFORE INSERT ON tbl_transaksi
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    ->     IF NEW.total_belanja < 0 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT =
+    ->         'Total belanja tidak boleh negatif';
+    ->     END IF;
+    ->
+    -> END //
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> INSERT INTO tbl_transaksi
+    -> (tanggal, id_pelanggan, total_belanja)
+    -> VALUES
+    -> ('2026-11-09', 1, -50000);
+ERROR 1644 (45000): Total belanja tidak boleh negatif
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_transaksi
+    -> WHERE total_belanja < 0;
+Empty set (0.000 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE TRIGGER after_delete_pelanggan
+    -> AFTER DELETE ON tbl_pelanggan
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    ->     INSERT INTO log_pelanggan
+    ->     (aktivitas, id_pelanggan)
+    ->     VALUES
+    ->     ('DELETE PELANGGAN', OLD.id_pelanggan);
+    ->
+    -> END //
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> DELETE FROM tbl_pelanggan
+    -> WHERE id_pelanggan = @id_uji;
+Query OK, 0 rows affected (0.002 sec)
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_pelanggan
+    -> WHERE id_pelanggan = @id_uji;
+Empty set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM log_pelanggan
+    -> WHERE id_pelanggan = @id_uji
+    -> ORDER BY id_log;
+Empty set (0.000 sec)
+
+MariaDB [db_tokoku]> SHOW TRIGGERS;
++-------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| Trigger                 | Event  | Table         | Statement                                                                                                                                                                                                                           | Timing | Created                | sql_mode                                            | Definer        | character_set_client | collation_connection | Database Collation |
++-------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| after_insert_pelanggan  | INSERT | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_pelanggan
+    (aktivitas, id_pelanggan)
+    VALUES
+    ('INSERT PELANGGAN', NEW.id_pelanggan);
+
+END                                                                                                      | AFTER  | 2026-11-09 11:23:57.23 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| after_update_pelanggan  | UPDATE | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_perubahan_pelanggan
+    (
+        id_pelanggan,
+        nama_lama,
+        nama_baru
+    )
+    VALUES
+    (
+        OLD.id_pelanggan,
+        OLD.nama_pelanggan,
+        NEW.nama_pelanggan
+    );
+
+END | AFTER  | 2026-11-09 11:24:58.25 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| after_delete_pelanggan  | DELETE | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_pelanggan
+    (aktivitas, id_pelanggan)
+    VALUES
+    ('DELETE PELANGGAN', OLD.id_pelanggan);
+
+END                                                                                                      | AFTER  | 2026-11-09 11:26:26.07 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| before_insert_transaksi | INSERT | tbl_transaksi | BEGIN
+
+    IF NEW.total_belanja < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT =
+        'Total belanja tidak boleh negatif';
+    END IF;
+
+END                                                                   | BEFORE | 2026-11-09 11:26:04.57 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+4 rows in set (0.009 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM log_pelanggan;
++--------+------------------+--------------+---------------------+
+| id_log | aktivitas        | id_pelanggan | waktu               |
++--------+------------------+--------------+---------------------+
+|      1 | INSERT PELANGGAN |           13 | 2026-11-09 11:24:01 |
++--------+------------------+--------------+---------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM log_perubahan_pelanggan;
++--------+--------------+---------------------+------------------------+---------------------+
+| id_log | id_pelanggan | nama_lama           | nama_baru              | waktu               |
++--------+--------------+---------------------+------------------------+---------------------+
+|      1 |           13 | Pelanggan Uji Bab 5 | Pelanggan Update Bab 5 | 2026-11-09 11:25:12 |
++--------+--------------+---------------------+------------------------+---------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> WHERE id_pelanggan = @id_uji;SELECT @id_uji AS id_uji;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'WHERE id_pelanggan = @id_uji' at line 1
++--------+
+| id_uji |
++--------+
+| NULL   |
++--------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT id_pelanggan, nama_pelanggan, kota
+    -> FROM tbl_pelanggan
+    -> WHERE nama_pelanggan IN (
+    ->     'Uji Trigger Bab 5',
+    ->     'Pelanggan Update Bab 5'
+    -> );
++--------------+------------------------+----------+
+| id_pelanggan | nama_pelanggan         | kota     |
++--------------+------------------------+----------+
+|           13 | Pelanggan Update Bab 5 | Ponorogo |
++--------------+------------------------+----------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM log_pelanggan
+    -> ORDER BY id_log DESC;
++--------+------------------+--------------+---------------------+
+| id_log | aktivitas        | id_pelanggan | waktu               |
++--------+------------------+--------------+---------------------+
+|      1 | INSERT PELANGGAN |           13 | 2026-11-09 11:24:01 |
++--------+------------------+--------------+---------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM log_perubahan_pelanggan
+    -> ORDER BY id_log DESC;
++--------+--------------+---------------------+------------------------+---------------------+
+| id_log | id_pelanggan | nama_lama           | nama_baru              | waktu               |
++--------+--------------+---------------------+------------------------+---------------------+
+|      1 |           13 | Pelanggan Uji Bab 5 | Pelanggan Update Bab 5 | 2026-11-09 11:25:12 |
++--------+--------------+---------------------+------------------------+---------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SHOW TRIGGERS;
++-------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| Trigger                 | Event  | Table         | Statement                                                                                                                                                                                                                           | Timing | Created                | sql_mode                                            | Definer        | character_set_client | collation_connection | Database Collation |
++-------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| after_insert_pelanggan  | INSERT | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_pelanggan
+    (aktivitas, id_pelanggan)
+    VALUES
+    ('INSERT PELANGGAN', NEW.id_pelanggan);
+
+END                                                                                                      | AFTER  | 2026-11-09 11:23:57.23 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| after_update_pelanggan  | UPDATE | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_perubahan_pelanggan
+    (
+        id_pelanggan,
+        nama_lama,
+        nama_baru
+    )
+    VALUES
+    (
+        OLD.id_pelanggan,
+        OLD.nama_pelanggan,
+        NEW.nama_pelanggan
+    );
+
+END | AFTER  | 2026-11-09 11:24:58.25 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| after_delete_pelanggan  | DELETE | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_pelanggan
+    (aktivitas, id_pelanggan)
+    VALUES
+    ('DELETE PELANGGAN', OLD.id_pelanggan);
+
+END                                                                                                      | AFTER  | 2026-11-09 11:26:26.07 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| before_insert_transaksi | INSERT | tbl_transaksi | BEGIN
+
+    IF NEW.total_belanja < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT =
+        'Total belanja tidak boleh negatif';
+    END IF;
+
+END                                                                   | BEFORE | 2026-11-09 11:26:04.57 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+4 rows in set (0.017 sec)
+
+MariaDB [db_tokoku]> SELECT @id_uji AS id_uji;
++--------+
+| id_uji |
++--------+
+| NULL   |
++--------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> CREATE TABLE tbl_kategori (
+    ->     id_kategori INT AUTO_INCREMENT PRIMARY KEY,
+    ->     nama_kategori VARCHAR(100) NOT NULL UNIQUE
+    -> );
+Query OK, 0 rows affected (0.020 sec)
+
+MariaDB [db_tokoku]> desc tbl_kategori;
++---------------+--------------+------+-----+---------+----------------+
+| Field         | Type         | Null | Key | Default | Extra          |
++---------------+--------------+------+-----+---------+----------------+
+| id_kategori   | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nama_kategori | varchar(100) | NO   | UNI | NULL    |                |
++---------------+--------------+------+-----+---------+----------------+
+2 rows in set (0.009 sec)
+
+MariaDB [db_tokoku]> CREATE TABLE tbl_produk (
+    ->     id_produk INT AUTO_INCREMENT PRIMARY KEY,
+    ->     id_kategori INT NOT NULL,
+    ->     nama_produk VARCHAR(100) NOT NULL UNIQUE,
+    ->     harga DECIMAL(12,2) NOT NULL,
+    ->     stok INT NOT NULL DEFAULT 0,
+    ->
+    ->     FOREIGN KEY (id_kategori)
+    ->     REFERENCES tbl_kategori(id_kategori)
+    -> );
+Query OK, 0 rows affected (0.016 sec)
+
+MariaDB [db_tokoku]> desc tbl_produk;
++-------------+---------------+------+-----+---------+----------------+
+| Field       | Type          | Null | Key | Default | Extra          |
++-------------+---------------+------+-----+---------+----------------+
+| id_produk   | int(11)       | NO   | PRI | NULL    | auto_increment |
+| id_kategori | int(11)       | NO   | MUL | NULL    |                |
+| nama_produk | varchar(100)  | NO   | UNI | NULL    |                |
+| harga       | decimal(12,2) | NO   |     | NULL    |                |
+| stok        | int(11)       | NO   |     | 0       |                |
++-------------+---------------+------+-----+---------+----------------+
+5 rows in set (0.009 sec)
+
+MariaDB [db_tokoku]> INSERT INTO tbl_kategori (nama_kategori)
+    -> VALUES
+    -> ('Sembako'),
+    -> ('Minuman'),
+    -> ('Makanan'),
+    -> ('Kebersihan');
+Query OK, 4 rows affected (0.003 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> select * from tbl_kategori;
++-------------+---------------+
+| id_kategori | nama_kategori |
++-------------+---------------+
+|           4 | Kebersihan    |
+|           3 | Makanan       |
+|           2 | Minuman       |
+|           1 | Sembako       |
++-------------+---------------+
+4 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> INSERT INTO tbl_produk
+    -> (id_kategori, nama_produk, harga, stok)
+    -> VALUES
+    -> (1, 'Beras 5 Kg', 75000, 100),
+    -> (1, 'Minyak Goreng', 25000, 100),
+    -> (1, 'Gula Pasir', 15000, 100),
+    -> (1, 'Tepung Terigu', 12000, 100),
+    -> (1, 'Telur Ayam', 30000, 100),
+    -> (2, 'Teh Celup', 12000, 100),
+    -> (2, 'Kopi Bubuk', 18000, 100),
+    -> (2, 'Susu Kotak', 10000, 100),
+    -> (3, 'Mi Instan', 3500, 100),
+    -> (4, 'Sabun Mandi', 8000, 100);
+Query OK, 10 rows affected (0.003 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> SELECT
+    ->     p.id_produk,
+    ->     p.nama_produk,
+    ->     k.nama_kategori,
+    ->     p.harga,
+    ->     p.stok
+    -> FROM tbl_produk p
+    -> JOIN tbl_kategori k
+    -> ON p.id_kategori = k.id_kategori;
++-----------+---------------+---------------+----------+------+
+| id_produk | nama_produk   | nama_kategori | harga    | stok |
++-----------+---------------+---------------+----------+------+
+|        10 | Sabun Mandi   | Kebersihan    |  8000.00 |  100 |
+|         9 | Mi Instan     | Makanan       |  3500.00 |  100 |
+|         6 | Teh Celup     | Minuman       | 12000.00 |  100 |
+|         7 | Kopi Bubuk    | Minuman       | 18000.00 |  100 |
+|         8 | Susu Kotak    | Minuman       | 10000.00 |  100 |
+|         1 | Beras 5 Kg    | Sembako       | 75000.00 |  100 |
+|         2 | Minyak Goreng | Sembako       | 25000.00 |  100 |
+|         3 | Gula Pasir    | Sembako       | 15000.00 |  100 |
+|         4 | Tepung Terigu | Sembako       | 12000.00 |  100 |
+|         5 | Telur Ayam    | Sembako       | 30000.00 |  100 |
++-----------+---------------+---------------+----------+------+
+10 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> ALTER TABLE tbl_detail_transaksi
+    -> ADD COLUMN id_produk INT NULL;
+Query OK, 0 rows affected (0.006 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> UPDATE tbl_detail_transaksi d
+    -> JOIN tbl_produk p
+    -> ON d.nama_produk = p.nama_produk
+    -> SET d.id_produk = p.id_produk
+    -> WHERE d.id_produk IS NULL;
+Query OK, 10 rows affected (0.002 sec)
+Rows matched: 10  Changed: 10  Warnings: 0
+
+MariaDB [db_tokoku]> SELECT * FROM tbl_detail_transaksi;
++-----------+--------------+---------------+--------+----------+-----------+
+| id_detail | id_transaksi | nama_produk   | jumlah | harga    | id_produk |
++-----------+--------------+---------------+--------+----------+-----------+
+|         1 |            1 | Beras 5 Kg    |      2 | 75000.00 |         1 |
+|         2 |            1 | Minyak Goreng |      1 | 25000.00 |         2 |
+|         3 |            2 | Gula Pasir    |      3 | 15000.00 |         3 |
+|         4 |            2 | Teh Celup     |      2 | 12000.00 |         6 |
+|         5 |            3 | Kopi Bubuk    |      2 | 18000.00 |         7 |
+|         6 |            4 | Susu Kotak    |      5 | 10000.00 |         8 |
+|         7 |            5 | Mi Instan     |     10 |  3500.00 |         9 |
+|         8 |            6 | Sabun Mandi   |      4 |  8000.00 |        10 |
+|         9 |            7 | Telur Ayam    |      2 | 30000.00 |         5 |
+|        10 |            8 | Tepung Terigu |      3 | 12000.00 |         4 |
++-----------+--------------+---------------+--------+----------+-----------+
+10 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> ALTER TABLE tbl_detail_transaksi
+    -> ADD CONSTRAINT fk_detail_produk_bab6
+    -> FOREIGN KEY (id_produk)
+    -> REFERENCES tbl_produk(id_produk);
+Query OK, 10 rows affected (0.040 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> CREATE TABLE tbl_log (
+    ->     id_log INT AUTO_INCREMENT PRIMARY KEY,
+    ->     nama_tabel VARCHAR(50),
+    ->     id_data INT,
+    ->     aktivitas VARCHAR(50),
+    ->     keterangan TEXT,
+    ->     waktu TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    -> );
+Query OK, 0 rows affected (0.008 sec)
+
+MariaDB [db_tokoku]> desc tbl_log;
++------------+-------------+------+-----+---------------------+----------------+
+| Field      | Type        | Null | Key | Default             | Extra          |
++------------+-------------+------+-----+---------------------+----------------+
+| id_log     | int(11)     | NO   | PRI | NULL                | auto_increment |
+| nama_tabel | varchar(50) | YES  |     | NULL                |                |
+| id_data    | int(11)     | YES  |     | NULL                |                |
+| aktivitas  | varchar(50) | YES  |     | NULL                |                |
+| keterangan | text        | YES  |     | NULL                |                |
+| waktu      | timestamp   | NO   |     | current_timestamp() |                |
++------------+-------------+------+-----+---------------------+----------------+
+6 rows in set (0.008 sec)
+
+MariaDB [db_tokoku]> show tables;
++--------------------------+
+| Tables_in_db_tokoku      |
++--------------------------+
+| log_pelanggan            |
+| log_perubahan_pelanggan  |
+| tbl_cabang               |
+| tbl_detail_transaksi     |
+| tbl_kategori             |
+| tbl_log                  |
+| tbl_pelanggan            |
+| tbl_produk               |
+| tbl_transaksi            |
+| view_pelanggan           |
+| view_total_belanja       |
+| view_transaksi_pelanggan |
++--------------------------+
+12 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> CREATE OR REPLACE VIEW view_laporan_penjualan_bab6 AS
+    -> SELECT
+    ->     t.id_transaksi,
+    ->     t.tanggal,
+    ->     p.nama_pelanggan,
+    ->     COUNT(d.id_detail) AS jumlah_jenis_produk,
+    ->     COALESCE(SUM(d.jumlah), 0) AS total_barang,
+    ->     t.total_belanja
+    -> FROM tbl_transaksi t
+    -> JOIN tbl_pelanggan p
+    -> ON t.id_pelanggan = p.id_pelanggan
+    -> LEFT JOIN tbl_detail_transaksi d
+    -> ON t.id_transaksi = d.id_transaksi
+    -> GROUP BY
+    ->     t.id_transaksi,
+    ->     t.tanggal,
+    ->     p.nama_pelanggan,
+    ->     t.total_belanja;
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM view_laporan_penjualan_bab6;
++--------------+------------+----------------+---------------------+--------------+---------------+
+| id_transaksi | tanggal    | nama_pelanggan | jumlah_jenis_produk | total_barang | total_belanja |
++--------------+------------+----------------+---------------------+--------------+---------------+
+|            1 | 2026-10-01 | Andi           |                   2 |            3 |     250000.00 |
+|            2 | 2026-10-02 | Budi           |                   2 |            5 |     350000.00 |
+|            3 | 2026-10-03 | Andi           |                   1 |            2 |     150000.00 |
+|            4 | 2026-10-04 | Citra          |                   1 |            5 |     500000.00 |
+|            5 | 2026-10-05 | Joko           |                   1 |           10 |     275000.00 |
+|            6 | 2026-10-06 | Rizky          |                   1 |            4 |     425000.00 |
+|            7 | 2026-10-07 | Dewi           |                   1 |            2 |     180000.00 |
+|            8 | 2026-10-08 | Nina           |                   1 |            3 |     650000.00 |
+|            9 | 2026-10-09 | Rahma          |                   0 |            0 |     320000.00 |
+|           10 | 2026-10-10 | Fajar          |                   0 |            0 |     550000.00 |
+|           11 | 2026-10-11 | Putri          |                   0 |            0 |     750000.00 |
+|           12 | 2026-10-12 | Andi           |                   0 |            0 |     200000.00 |
+|           13 | 2026-10-13 | Budi           |                   0 |            0 |     375000.00 |
+|           14 | 2026-10-14 | Citra          |                   0 |            0 |     825000.00 |
+|           15 | 2026-10-15 | Joko           |                   0 |            0 |     150000.00 |
+|           16 | 2026-10-16 | Rizky          |                   0 |            0 |     290000.00 |
+|           17 | 2026-10-17 | Dewi           |                   0 |            0 |     475000.00 |
+|           18 | 2026-10-18 | Nina           |                   0 |            0 |     900000.00 |
+|           19 | 2026-10-19 | Rahma          |                   0 |            0 |     225000.00 |
+|           20 | 2026-10-20 | Fajar          |                   0 |            0 |     600000.00 |
++--------------+------------+----------------+---------------------+--------------+---------------+
+20 rows in set (0.001 sec)
+
+|           20 | 2026-10-20 | Fajar          |                   0 |            0 |     600000.00 |
++--------------+------------+----------------+---------------------+--------------+---------------+
+20 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> SELECT
+    ->     t.id_transaksi,
+    ->     t.tanggal,
+    ->     p.nama_pelanggan,
+    ->     d.nama_produk,
+    ->     k.nama_kategori,
+    ->     d.jumlah,
+    ->     d.harga
+    -> FROM tbl_transaksi t
+    -> JOIN tbl_pelanggan p
+    -> ON t.id_pelanggan = p.id_pelanggan
+    -> JOIN tbl_detail_transaksi d
+    -> ON t.id_transaksi = d.id_transaksi
+    -> LEFT JOIN tbl_produk pr
+    -> ON d.id_produk = pr.id_produk
+    -> LEFT JOIN tbl_kategori k
+    -> ON pr.id_kategori = k.id_kategori;
++--------------+------------+----------------+---------------+---------------+--------+----------+
+| id_transaksi | tanggal    | nama_pelanggan | nama_produk   | nama_kategori | jumlah | harga    |
++--------------+------------+----------------+---------------+---------------+--------+----------+
+|            1 | 2026-10-01 | Andi           | Beras 5 Kg    | Sembako       |      2 | 75000.00 |
+|            1 | 2026-10-01 | Andi           | Minyak Goreng | Sembako       |      1 | 25000.00 |
+|            2 | 2026-10-02 | Budi           | Gula Pasir    | Sembako       |      3 | 15000.00 |
+|            2 | 2026-10-02 | Budi           | Teh Celup     | Minuman       |      2 | 12000.00 |
+|            3 | 2026-10-03 | Andi           | Kopi Bubuk    | Minuman       |      2 | 18000.00 |
+|            4 | 2026-10-04 | Citra          | Susu Kotak    | Minuman       |      5 | 10000.00 |
+|            5 | 2026-10-05 | Joko           | Mi Instan     | Makanan       |     10 |  3500.00 |
+|            6 | 2026-10-06 | Rizky          | Sabun Mandi   | Kebersihan    |      4 |  8000.00 |
+|            7 | 2026-10-07 | Dewi           | Telur Ayam    | Sembako       |      2 | 30000.00 |
+|            8 | 2026-10-08 | Nina           | Tepung Terigu | Sembako       |      3 | 12000.00 |
++--------------+------------+----------------+---------------+---------------+--------+----------+
+10 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT
+    ->     id_transaksi,
+    ->     tanggal,
+    ->     id_pelanggan,
+    ->     total_belanja
+    -> FROM tbl_transaksi
+    -> WHERE total_belanja > (
+    ->     SELECT AVG(total_belanja)
+    ->     FROM tbl_transaksi
+    -> );
++--------------+------------+--------------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | total_belanja |
++--------------+------------+--------------+---------------+
+|            4 | 2026-10-04 |            3 |     500000.00 |
+|            6 | 2026-10-06 |            5 |     425000.00 |
+|            8 | 2026-10-08 |            7 |     650000.00 |
+|           10 | 2026-10-10 |            9 |     550000.00 |
+|           11 | 2026-10-11 |           10 |     750000.00 |
+|           14 | 2026-10-14 |            3 |     825000.00 |
+|           17 | 2026-10-17 |            6 |     475000.00 |
+|           18 | 2026-10-18 |            7 |     900000.00 |
+|           20 | 2026-10-20 |            9 |     600000.00 |
++--------------+------------+--------------+---------------+
+9 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE FUNCTION fn_total_harga_bab6(
+    ->     p_harga DECIMAL(12,2),
+    ->     p_jumlah INT
+    -> )
+    -> RETURNS DECIMAL(12,2)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     RETURN p_harga * p_jumlah;
+    -> END //
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT fn_total_harga_bab6(75000, 2)
+    -> AS total_harga;
++-------------+
+| total_harga |
++-------------+
+|   150000.00 |
++-------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE FUNCTION fn_harga_setelah_diskon_bab6(
+    ->     p_total DECIMAL(12,2),
+    ->     p_diskon DECIMAL(5,2)
+    -> )
+    -> RETURNS DECIMAL(12,2)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     RETURN p_total - (p_total * p_diskon / 100);
+    -> END //
+Query OK, 0 rows affected (0.004 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT fn_harga_setelah_diskon_bab6(150000, 10)
+    -> AS harga_setelah_diskon;
++----------------------+
+| harga_setelah_diskon |
++----------------------+
+|            135000.00 |
++----------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE PROCEDURE sp_tambah_transaksi_bab6(
+    ->     IN p_id_pelanggan INT,
+    ->     IN p_tanggal DATE,
+    ->     IN p_id_produk INT,
+    ->     IN p_jumlah INT,
+    ->     IN p_diskon DECIMAL(5,2),
+    ->     OUT p_id_transaksi INT,
+    ->     OUT p_total DECIMAL(12,2)
+    -> )
+    -> BEGIN
+    ->
+    ->     DECLARE v_jumlah INT DEFAULT 0;
+    ->     DECLARE v_nama_produk VARCHAR(100);
+    ->     DECLARE v_harga DECIMAL(12,2);
+    ->     DECLARE v_stok INT;
+    ->     DECLARE v_subtotal DECIMAL(12,2);
+    ->     DECLARE v_total DECIMAL(12,2);
+    ->
+    ->     DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    ->     BEGIN
+    ->         ROLLBACK;
+    ->         RESIGNAL;
+    ->     END;
+    ->
+    ->     START TRANSACTION;
+    ->
+    ->     IF p_jumlah IS NULL OR p_jumlah <= 0 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Jumlah produk harus lebih dari nol';
+    ->     END IF;
+    ->
+    ->     IF p_diskon IS NULL OR p_diskon < 0 OR p_diskon > 100 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Persentase diskon tidak valid';
+    ->     END IF;
+    ->
+    ->     SELECT COUNT(*)
+    ->     INTO v_jumlah
+    ->     FROM tbl_pelanggan
+    ->     WHERE id_pelanggan = p_id_pelanggan;
+    ->
+    ->     IF v_jumlah = 0 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Pelanggan tidak ditemukan';
+    ->     END IF;
+    ->
+    ->     SELECT COUNT(*)
+    ->     INTO v_jumlah
+    ->     FROM tbl_produk
+    ->     WHERE id_produk = p_id_produk;
+    ->
+    ->     IF v_jumlah = 0 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Produk tidak ditemukan';
+    ->     END IF;
+    ->
+    ->     SELECT nama_produk, harga, stok
+    ->     INTO v_nama_produk, v_harga, v_stok
+    ->     FROM tbl_produk
+    ->     WHERE id_produk = p_id_produk;
+    ->
+    ->     IF v_stok < p_jumlah THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Stok produk tidak mencukupi';
+    ->     END IF;
+    ->
+    ->     SET v_subtotal = fn_total_harga_bab6(
+    ->         v_harga,
+    ->         p_jumlah
+    ->     );
+    ->
+    ->     SET v_total = fn_harga_setelah_diskon_bab6(
+    ->         v_subtotal,
+    ->         p_diskon
+    ->     );
+    ->
+    ->     INSERT INTO tbl_transaksi
+    ->     (tanggal, id_pelanggan, total_belanja)
+    ->     VALUES
+    ->     (p_tanggal, p_id_pelanggan, v_total);
+    ->
+    ->     SET p_id_transaksi = LAST_INSERT_ID();
+    ->
+    ->     INSERT INTO tbl_detail_transaksi
+    ->     (
+    ->         id_transaksi,
+    ->         id_produk,
+    ->         nama_produk,
+    ->         jumlah,
+    ->         harga
+    ->     )
+    ->     VALUES
+    ->     (
+    ->         p_id_transaksi,
+    ->         p_id_produk,
+    ->         v_nama_produk,
+    ->         p_jumlah,
+    ->         v_harga
+    ->     );
+    ->
+    ->     UPDATE tbl_produk
+    ->     SET stok = stok - p_jumlah
+    ->     WHERE id_produk = p_id_produk;
+    ->
+    ->     COMMIT;
+    ->
+    ->     SET p_total = v_total;
+    ->
+    -> END //
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> CALL sp_tambah_transaksi_bab6(
+    ->     1,
+    ->     CURDATE(),
+    ->     1,
+    ->     2,
+    ->     10,
+    ->     @id_transaksi_baru,
+    ->     @total_belanja_baru
+    -> );
+Query OK, 6 rows affected (0.004 sec)
+
+MariaDB [db_tokoku]> SELECT
+    ->     @id_transaksi_baru AS id_transaksi,
+    ->     @total_belanja_baru AS total_belanja;
++--------------+---------------+
+| id_transaksi | total_belanja |
++--------------+---------------+
+|           21 |     135000.00 |
++--------------+---------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_transaksi
+    -> ORDER BY id_transaksi DESC
+    -> LIMIT 5;
++--------------+------------+--------------+---------------+
+| id_transaksi | tanggal    | id_pelanggan | total_belanja |
++--------------+------------+--------------+---------------+
+|           21 | 2026-11-09 |            1 |     135000.00 |
+|           20 | 2026-10-20 |            9 |     600000.00 |
+|           19 | 2026-10-19 |            8 |     225000.00 |
+|           18 | 2026-10-18 |            7 |     900000.00 |
+|           17 | 2026-10-17 |            6 |     475000.00 |
++--------------+------------+--------------+---------------+
+5 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_detail_transaksi
+    -> ORDER BY id_detail DESC
+    -> LIMIT 5;
++-----------+--------------+---------------+--------+----------+-----------+
+| id_detail | id_transaksi | nama_produk   | jumlah | harga    | id_produk |
++-----------+--------------+---------------+--------+----------+-----------+
+|        11 |           21 | Beras 5 Kg    |      2 | 75000.00 |         1 |
+|        10 |            8 | Tepung Terigu |      3 | 12000.00 |         4 |
+|         9 |            7 | Telur Ayam    |      2 | 30000.00 |         5 |
+|         8 |            6 | Sabun Mandi   |      4 |  8000.00 |        10 |
+|         7 |            5 | Mi Instan     |     10 |  3500.00 |         9 |
++-----------+--------------+---------------+--------+----------+-----------+
+5 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM tbl_produk
+    -> WHERE id_produk = 1;
++-----------+-------------+-------------+----------+------+
+| id_produk | id_kategori | nama_produk | harga    | stok |
++-----------+-------------+-------------+----------+------+
+|         1 |           1 | Beras 5 Kg  | 75000.00 |   98 |
++-----------+-------------+-------------+----------+------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE TRIGGER trg_log_transaksi_insert_bab6
+    -> AFTER INSERT ON tbl_transaksi
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    ->     INSERT INTO tbl_log
+    ->     (nama_tabel, id_data, aktivitas, keterangan)
+    ->     VALUES
+    ->     (
+    ->         'tbl_transaksi',
+    ->         NEW.id_transaksi,
+    ->         'INSERT',
+    ->         CONCAT(
+    ->             'Transaksi baru dengan total belanja ',
+    ->             NEW.total_belanja
+    ->         )
+    ->     );
+    ->
+    -> END //
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> DELIMITER //
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> CREATE TRIGGER trg_log_transaksi_update_bab6
+    -> AFTER UPDATE ON tbl_transaksi
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    ->     INSERT INTO tbl_log
+    ->     (nama_tabel, id_data, aktivitas, keterangan)
+    ->     VALUES
+    ->     (
+    ->         'tbl_transaksi',
+    ->         NEW.id_transaksi,
+    ->         'UPDATE',
+    ->         CONCAT(
+    ->             'Total lama: ',
+    ->             OLD.total_belanja,
+    ->             ' | Total baru: ',
+    ->             NEW.total_belanja
+    ->         )
+    ->     );
+    ->
+    -> END //
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> DELIMITER ;
+MariaDB [db_tokoku]> SELECT * FROM tbl_log;
+Empty set (0.000 sec)
+
+MariaDB [db_tokoku]> SHOW TRIGGERS;
++-------------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| Trigger                       | Event  | Table         | Statement                                                                                                                                                                                                                                                                                                                           | Timing | Created                | sql_mode                                            | Definer        | character_set_client | collation_connection | Database Collation |
++-------------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| after_insert_pelanggan        | INSERT | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_pelanggan
+    (aktivitas, id_pelanggan)
+    VALUES
+    ('INSERT PELANGGAN', NEW.id_pelanggan);
+
+END                                                                                                                                                                                                      | AFTER  | 2026-11-09 11:23:57.23 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| after_update_pelanggan        | UPDATE | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_perubahan_pelanggan
+    (
+        id_pelanggan,
+        nama_lama,
+        nama_baru
+    )
+    VALUES
+    (
+        OLD.id_pelanggan,
+        OLD.nama_pelanggan,
+        NEW.nama_pelanggan
+    );
+
+END                                                                                                 | AFTER  | 2026-11-09 11:24:58.25 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| after_delete_pelanggan        | DELETE | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_pelanggan
+    (aktivitas, id_pelanggan)
+    VALUES
+    ('DELETE PELANGGAN', OLD.id_pelanggan);
+
+END                                                                                                                                                                                                      | AFTER  | 2026-11-09 11:26:26.07 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| before_insert_transaksi       | INSERT | tbl_transaksi | BEGIN
+
+    IF NEW.total_belanja < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT =
+        'Total belanja tidak boleh negatif';
+    END IF;
+
+END                                                                                                                                                                   | BEFORE | 2026-11-09 11:26:04.57 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| trg_log_transaksi_insert_bab6 | INSERT | tbl_transaksi | BEGIN
+
+    INSERT INTO tbl_log
+    (nama_tabel, id_data, aktivitas, keterangan)
+    VALUES
+    (
+        'tbl_transaksi',
+        NEW.id_transaksi,
+        'INSERT',
+        CONCAT(
+            'Transaksi baru dengan total belanja ',
+            NEW.total_belanja
+        )
+    );
+
+END                                       | AFTER  | 2026-11-09 12:47:29.72 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| trg_log_transaksi_update_bab6 | UPDATE | tbl_transaksi | BEGIN
+
+    INSERT INTO tbl_log
+    (nama_tabel, id_data, aktivitas, keterangan)
+    VALUES
+    (
+        'tbl_transaksi',
+        NEW.id_transaksi,
+        'UPDATE',
+        CONCAT(
+            'Total lama: ',
+            OLD.total_belanja,
+            ' | Total baru: ',
+            NEW.total_belanja
+        )
+    );
+
+END | AFTER  | 2026-11-09 12:48:10.84 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-------------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+6 rows in set (0.010 sec)
+
+MariaDB [db_tokoku]> CALL sp_tambah_transaksi_bab6(
+    ->     1,
+    ->     CURDATE(),
+    ->     1,
+    ->     2,
+    ->     10,
+    ->     @id_transaksi_baru,
+    ->     @total_belanja_baru
+    -> );
+Query OK, 7 rows affected (0.005 sec)
+
+MariaDB [db_tokoku]> SELECT @id_transaksi_baru, @total_belanja_baru;
++--------------------+---------------------+
+| @id_transaksi_baru | @total_belanja_baru |
++--------------------+---------------------+
+|                 22 |           135000.00 |
++--------------------+---------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SELECT * FROM tbl_log;
++--------+---------------+---------+-----------+-----------------------------------------------+---------------------+
+| id_log | nama_tabel    | id_data | aktivitas | keterangan                                    | waktu               |
++--------+---------------+---------+-----------+-----------------------------------------------+---------------------+
+|      1 | tbl_transaksi |      22 | INSERT    | Transaksi baru dengan total belanja 135000.00 | 2026-11-09 12:49:55 |
++--------+---------------+---------+-----------+-----------------------------------------------+---------------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> UPDATE tbl_transaksi
+    -> SET total_belanja = total_belanja + 10000
+    -> WHERE id_transaksi = @id_transaksi_baru;
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [db_tokoku]> SELECT * FROM tbl_log
+    -> ORDER BY id_log DESC;
++--------+---------------+---------+-----------+-----------------------------------------------+---------------------+
+| id_log | nama_tabel    | id_data | aktivitas | keterangan                                    | waktu               |
++--------+---------------+---------+-----------+-----------------------------------------------+---------------------+
+|      2 | tbl_transaksi |      22 | UPDATE    | Total lama: 135000.00 | Total baru: 145000.00 | 2026-11-09 12:50:34 |
+|      1 | tbl_transaksi |      22 | INSERT    | Transaksi baru dengan total belanja 135000.00 | 2026-11-09 12:49:55 |
++--------+---------------+---------+-----------+-----------------------------------------------+---------------------+
+2 rows in set (0.000 sec)
+
+MariaDB [db_tokoku]> START TRANSACTION;
+Query OK, 0 rows affected (0.000 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> INSERT INTO tbl_log
+    -> (nama_tabel, id_data, aktivitas, keterangan)
+    -> VALUES
+    -> ('tbl_log', 0, 'UJI ROLLBACK', 'Percobaan pembatalan transaksi');
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> ROLLBACK;
+Query OK, 0 rows affected (0.002 sec)
+
+MariaDB [db_tokoku]> SELECT *
+    -> FROM tbl_log
+    -> WHERE aktivitas = 'UJI ROLLBACK';
+Empty set (0.000 sec)
+
+MariaDB [db_tokoku]> START TRANSACTION;
+Query OK, 0 rows affected (0.000 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> INSERT INTO tbl_log
+    -> (nama_tabel, id_data, aktivitas, keterangan)
+    -> VALUES
+    -> ('tbl_log', 0, 'UJI COMMIT', 'Percobaan penyimpanan transaksi');
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [db_tokoku]>
+MariaDB [db_tokoku]> COMMIT;
+Query OK, 0 rows affected (0.002 sec)
+
+MariaDB [db_tokoku]> CREATE INDEX idx_transaksi_tanggal_bab6
+    -> ON tbl_transaksi(tanggal);
+Query OK, 0 rows affected (0.011 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> CREATE INDEX idx_detail_transaksi_produk_bab6
+    -> ON tbl_detail_transaksi(id_transaksi, id_produk);
+Query OK, 0 rows affected (0.012 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> CREATE INDEX idx_log_waktu_bab6
+    -> ON tbl_log(waktu);
+Query OK, 0 rows affected (0.010 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [db_tokoku]> SHOW INDEX FROM tbl_transaksi;
++---------------+------------+----------------------------+--------------+--------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table         | Non_unique | Key_name                   | Seq_in_index | Column_name  | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++---------------+------------+----------------------------+--------------+--------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| tbl_transaksi |          0 | PRIMARY                    |            1 | id_transaksi | A         |          21 |     NULL | NULL   |      | BTREE      |         |               |
+| tbl_transaksi |          1 | id_pelanggan               |            1 | id_pelanggan | A         |          21 |     NULL | NULL   | YES  | BTREE      |         |               |
+| tbl_transaksi |          1 | idx_transaksi_tanggal_bab6 |            1 | tanggal      | A         |          21 |     NULL | NULL   | YES  | BTREE      |         |               |
++---------------+------------+----------------------------+--------------+--------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+3 rows in set (0.001 sec)
+
+| tbl_transaksi |          0 | PRIMARY                    |            1 | id_transaksi | A         |          21 |     NULL | NULL   |      | BTREE      |         |               |
+| tbl_transaksi |          1 | id_pelanggan               |            1 | id_pelanggan | A         |          21 |     NULL | NULL   | YES  | BTREE      |         |               |
+| tbl_transaksi |          1 | idx_transaksi_tanggal_bab6 |            1 | tanggal      | A         |          21 |     NULL | NULL   | YES  | BTREE      |         |               |
++---------------+------------+----------------------------+--------------+--------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+3 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> Bye
+
+AIO RPL@DESKTOP-IADQQDU c:\xampp
+# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 86
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> use db_tokoku;
+Database changed
+MariaDB [db_tokoku]> SHOW INDEX FROM tbl_detail_transaksi;
++----------------------+------------+----------------------------------+--------------+--------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table                | Non_unique | Key_name                         | Seq_in_index | Column_name  | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++----------------------+------------+----------------------------------+--------------+--------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| tbl_detail_transaksi |          0 | PRIMARY                          |            1 | id_detail    | A         |          12 |     NULL | NULL   |      | BTREE      |         |               |
+| tbl_detail_transaksi |          1 | fk_detail_produk_bab6            |            1 | id_produk    | A         |          12 |     NULL | NULL   | YES  | BTREE      |         |               |
+| tbl_detail_transaksi |          1 | idx_detail_transaksi_produk_bab6 |            1 | id_transaksi | A         |          12 |     NULL | NULL   | YES  | BTREE      |         |               |
+| tbl_detail_transaksi |          1 | idx_detail_transaksi_produk_bab6 |            2 | id_produk    | A         |          12 |     NULL | NULL   | YES  | BTREE      |         |               |
++----------------------+------------+----------------------------------+--------------+--------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+4 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> SHOW INDEX FROM tbl_log;
++---------+------------+--------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table   | Non_unique | Key_name           | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++---------+------------+--------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| tbl_log |          0 | PRIMARY            |            1 | id_log      | A         |           3 |     NULL | NULL   |      | BTREE      |         |               |
+| tbl_log |          1 | idx_log_waktu_bab6 |            1 | waktu       | A         |           3 |     NULL | NULL   |      | BTREE      |         |               |
++---------+------------+--------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+2 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> EXPLAIN
+    -> SELECT *
+    -> FROM tbl_transaksi
+    -> WHERE tanggal BETWEEN '2026-10-01'
+    -> AND '2026-10-31';
++------+-------------+---------------+------+----------------------------+------+---------+------+------+-------------+
+| id   | select_type | table         | type | possible_keys              | key  | key_len | ref  | rows | Extra       |
++------+-------------+---------------+------+----------------------------+------+---------+------+------+-------------+
+|    1 | SIMPLE      | tbl_transaksi | ALL  | idx_transaksi_tanggal_bab6 | NULL | NULL    | NULL | 21   | Using where |
++------+-------------+---------------+------+----------------------------+------+---------+------+------+-------------+
+1 row in set (0.000 sec)
+
+MariaDB [db_tokoku]> SHOW TABLES;
++-----------------------------+
+| Tables_in_db_tokoku         |
++-----------------------------+
+| log_pelanggan               |
+| log_perubahan_pelanggan     |
+| tbl_cabang                  |
+| tbl_detail_transaksi        |
+| tbl_kategori                |
+| tbl_log                     |
+| tbl_pelanggan               |
+| tbl_produk                  |
+| tbl_transaksi               |
+| view_laporan_penjualan_bab6 |
+| view_pelanggan              |
+| view_total_belanja          |
+| view_transaksi_pelanggan    |
++-----------------------------+
+13 rows in set (0.001 sec)
+
+MariaDB [db_tokoku]> SHOW FULL TABLES
+    -> WHERE Table_type = 'VIEW';
++-----------------------------+------------+
+| Tables_in_db_tokoku         | Table_type |
++-----------------------------+------------+
+| view_laporan_penjualan_bab6 | VIEW       |
+| view_pelanggan              | VIEW       |
+| view_total_belanja          | VIEW       |
+| view_transaksi_pelanggan    | VIEW       |
++-----------------------------+------------+
+4 rows in set (0.003 sec)
+
+MariaDB [db_tokoku]> view_laporan_penjualan_bab6
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'view_laporan_penjualan_bab6' at line 1
+MariaDB [db_tokoku]> SHOW PROCEDURE STATUS
+    -> WHERE Db = 'db_tokoku';
++-----------+--------------------------+-----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| Db        | Name                     | Type      | Definer        | Modified            | Created             | Security_type | Comment | character_set_client | collation_connection | Database Collation |
++-----------+--------------------------+-----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| db_tokoku | CariPelanggan            | PROCEDURE | root@localhost | 2026-11-09 10:01:04 | 2026-11-09 10:01:04 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | HitungPelanggan          | PROCEDURE | root@localhost | 2026-11-09 10:02:11 | 2026-11-09 10:02:11 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | LaporanTransaksi         | PROCEDURE | root@localhost | 2026-11-09 10:02:31 | 2026-11-09 10:02:31 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | sp_tambah_transaksi_bab6 | PROCEDURE | root@localhost | 2026-11-09 11:56:07 | 2026-11-09 11:56:07 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | TambahPelanggan          | PROCEDURE | root@localhost | 2026-11-09 10:01:36 | 2026-11-09 10:01:36 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | TampilPelanggan          | PROCEDURE | root@localhost | 2026-11-09 10:08:09 | 2026-11-09 10:08:09 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-----------+--------------------------+-----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+6 rows in set (0.010 sec)
+
+MariaDB [db_tokoku]> SHOW FUNCTION STATUS
+    -> WHERE Db = 'db_tokoku';
++-----------+------------------------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| Db        | Name                         | Type     | Definer        | Modified            | Created             | Security_type | Comment | character_set_client | collation_connection | Database Collation |
++-----------+------------------------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| db_tokoku | fn_harga_setelah_diskon_bab6 | FUNCTION | root@localhost | 2026-11-09 11:55:23 | 2026-11-09 11:55:23 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | fn_total_harga_bab6          | FUNCTION | root@localhost | 2026-11-09 11:54:55 | 2026-11-09 11:54:55 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | HitungDiskon                 | FUNCTION | root@localhost | 2026-11-09 10:57:16 | 2026-11-09 10:57:16 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | HitungPajak                  | FUNCTION | root@localhost | 2026-11-09 10:53:29 | 2026-11-09 10:53:29 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | HitungTotal                  | FUNCTION | root@localhost | 2026-11-09 10:53:07 | 2026-11-09 10:53:07 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | KategoriBelanja              | FUNCTION | root@localhost | 2026-11-09 10:53:42 | 2026-11-09 10:53:42 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| db_tokoku | KonversiNilai                | FUNCTION | root@localhost | 2026-11-09 10:54:36 | 2026-11-09 10:54:36 | DEFINER       |         | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-----------+------------------------------+----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+7 rows in set (0.009 sec)
+
+MariaDB [db_tokoku]> SHOW TRIGGERS;
++-------------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| Trigger                       | Event  | Table         | Statement                                                                                                                                                                                                                                                                                                                           | Timing | Created                | sql_mode                                            | Definer        | character_set_client | collation_connection | Database Collation |
++-------------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| after_insert_pelanggan        | INSERT | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_pelanggan
+    (aktivitas, id_pelanggan)
+    VALUES
+    ('INSERT PELANGGAN', NEW.id_pelanggan);
+
+END                                                                                                                                                                                                      | AFTER  | 2026-11-09 11:23:57.23 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| after_update_pelanggan        | UPDATE | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_perubahan_pelanggan
+    (
+        id_pelanggan,
+        nama_lama,
+        nama_baru
+    )
+    VALUES
+    (
+        OLD.id_pelanggan,
+        OLD.nama_pelanggan,
+        NEW.nama_pelanggan
+    );
+
+END                                                                                                 | AFTER  | 2026-11-09 11:24:58.25 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| after_delete_pelanggan        | DELETE | tbl_pelanggan | BEGIN
+
+    INSERT INTO log_pelanggan
+    (aktivitas, id_pelanggan)
+    VALUES
+    ('DELETE PELANGGAN', OLD.id_pelanggan);
+
+END                                                                                                                                                                                                      | AFTER  | 2026-11-09 11:26:26.07 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| before_insert_transaksi       | INSERT | tbl_transaksi | BEGIN
+
+    IF NEW.total_belanja < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT =
+        'Total belanja tidak boleh negatif';
+    END IF;
+
+END                                                                                                                                                                   | BEFORE | 2026-11-09 11:26:04.57 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| trg_log_transaksi_insert_bab6 | INSERT | tbl_transaksi | BEGIN
+
+    INSERT INTO tbl_log
+    (nama_tabel, id_data, aktivitas, keterangan)
+    VALUES
+    (
+        'tbl_transaksi',
+        NEW.id_transaksi,
+        'INSERT',
+        CONCAT(
+            'Transaksi baru dengan total belanja ',
+            NEW.total_belanja
+        )
+    );
+
+END                                       | AFTER  | 2026-11-09 12:47:29.72 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
+| trg_log_transaksi_update_bab6 | UPDATE | tbl_transaksi | BEGIN
+
+    INSERT INTO tbl_log
+    (nama_tabel, id_data, aktivitas, keterangan)
+    VALUES
+    (
+        'tbl_transaksi',
+        NEW.id_transaksi,
+        'UPDATE',
+        CONCAT(
+            'Total lama: ',
+            OLD.total_belanja,
+            ' | Total baru: ',
+            NEW.total_belanja
+        )
+    );
+
+END | AFTER  | 2026-11-09 12:48:10.84 | NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION | root@localhost | utf8mb4              | utf8mb4_general_ci   | utf8mb4_general_ci |
++-------------------------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-----------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+6 rows in set (0.011 sec)
+
+MariaDB [db_tokoku]>
