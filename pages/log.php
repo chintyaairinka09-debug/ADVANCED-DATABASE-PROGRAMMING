@@ -1,0 +1,7 @@
+<?php
+$logs = $pdo->query('SELECT id_log, nama_tabel, id_data, aktivitas, keterangan, waktu FROM tbl_log ORDER BY id_log DESC LIMIT 200')->fetchAll();
+?>
+<section class="page-heading"><div><span class="eyebrow">AUDIT DATABASE</span><h1>Log Aktivitas</h1><p>Riwayat aktivitas yang dicatat oleh Trigger ke tabel <code>tbl_log</code>.</p></div></section>
+<section class="panel panel-table"><div class="panel-heading"><div><h2>Riwayat Aktivitas</h2><p><?= count($logs) ?> catatan terakhir ditampilkan (maksimal 200).</p></div><span class="soft-badge">Trigger Audit</span></div>
+    <div class="table-wrap"><table><thead><tr><th>ID Log</th><th>Tabel</th><th>ID Data</th><th>Aktivitas</th><th>Keterangan</th><th>Waktu</th></tr></thead><tbody><?php foreach ($logs as $log): ?><tr><td class="mono">#<?= e($log['id_log']) ?></td><td><span class="soft-badge"><?= e($log['nama_tabel']) ?></span></td><td><?= e($log['id_data']) ?></td><td><span class="activity-badge"><?= e($log['aktivitas']) ?></span></td><td class="log-description"><?= e($log['keterangan']) ?></td><td class="muted"><?= e(date('d/m/Y H:i', strtotime($log['waktu']))) ?></td></tr><?php endforeach; ?><?php if (!$logs): ?><tr><td colspan="6"><div class="empty-state"><span>◷</span><strong>Belum ada log aktivitas</strong><p>Log akan muncul ketika transaksi baru ditambahkan atau diperbarui melalui database.</p></div></td></tr><?php endif; ?></tbody></table></div>
+</section>
